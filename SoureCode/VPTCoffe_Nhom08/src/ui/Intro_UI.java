@@ -42,13 +42,12 @@ public class Intro_UI extends JFrame {
 
 		// ham loading
 		JProgressBar pgbLoadingBar = new JProgressBar();
-		pgbLoadingBar.setPreferredSize(new Dimension(500, 15));
 		pgbLoadingBar.setStringPainted(true);
 		pgbLoadingBar.setForeground(Color.decode("#B16E5C"));
 		pgbLoadingBar.setBackground(Color.decode("#dbdbdb"));
 		pgbLoadingBar.setBorder(null);
 
-		Timer timer = new Timer(7, new ActionListener() {
+		Timer timer = new Timer(10, new ActionListener() {
 			int progress = 0;
 
 			@Override
@@ -87,7 +86,7 @@ public class Intro_UI extends JFrame {
 	// ham mo ui login
 	private void OpenPageLogin() {
 
-		Timer timeClosePage = new Timer(2300, new ActionListener() {
+		Timer timeClosePage = new Timer(2200, new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
