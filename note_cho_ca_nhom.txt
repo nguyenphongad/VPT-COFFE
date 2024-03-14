@@ -1,3 +1,8 @@
-minh tao khung
-vô thư mục soureCode rồi import
-mau chu dao: B16E5C
+Phong: 	+ minh tao khung menu
+	+ vô thư mục soureCode rồi import
+	+ màu chủ đạo: #B16E5C
+
+Vũ : +
+
+
+Tâm: +

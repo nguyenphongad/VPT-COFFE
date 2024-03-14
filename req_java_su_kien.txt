@@ -1,0 +1,61 @@
+bọn mình sẽ xây dựng 1 app có map như sau, tuy đây nhập môn thôi nhưng muốn điểm cao và kinh nghiệm cho Tâm học PTUD thì làm sau:
+
+tên app: VPTCoffe
+1 khu vực sẽ có hệ thống gồm phần quyền (nhân viên, quản lý -> 1 khu vực duy nhất 1 quản lý thôi), quản lý sẽ quản lý nhân viên, vẫn bán cho khách được.
+MENU tui sẽ gửi sau, trước tiên ta sẽ bán cứng các món trong đó.
+
+VPTCoffe là hệ thống bán coffe
+
+- đặc tả, ERD, 
+- sơ đồ class
+
+sau khi hoàn thành đặc tả -> làm usecase tổng quát
+
+nhân viên--------quản lý-------khách hàng-------sản phẩm-------tài khoản-------hoá đơn
+
+(1) Phong, (2) Vũ, (3) Tâm
+
+(deadline ngày 30 / 3)
+
+# Làm Giao diện
+
++ tính tiền nhập hàng (1)
++ tích điểm ( khách hàng-> sdt) (1)
++ tìm kiếm nhân viên (1)
+
++ thêm, sửa, xoá nhân viên (2)
++ thống kế doanh thu (2)
++ tạo hoá đơn (2)
+
++ thêm, sửa , xoá đồ uống (3)
++ tìm kiếm đồ uống (3)
++ thanh toán (3)
+
+
+
+Nhân viên: 
+	_ 
+Quản lý: 
+	_
+
+
+
+nhân viên đăng nhập ->
+
+tiếp theo , khi khách hàng mua thì mình sẽ quản lý qua sdt khách hàng (mục đích là tích điểm, cái tích điểm mình sẽ gửi cơ chế sau). tiếp theo là quản lý qua sdt
+- sdt tồn tại -> 30k + 1 > 100 điểm -> 15% bill
+- quản lý nhân viên (quản lý): CRUD nhân viên+ không cần địa chỉ
+
+
+
+
+# khu vực quán sẽ chia ra mình có 4 địa điểm, (giả sử HCM, HÀ NỘI, ĐÀ NẴNG, HUẾ)
+ # doanh thu (thống kế):
+# khách hàng sẽ áp voucher cho khách hàng bằng cách (mua 1 tặng 1-> 1 sdt chỉ dùng dc 1 lần duy nhất (muốn dùng phải đọc sdt khác)).
+# việc xuất bill cho khách thì mình sẽ có thông tin (bổ sung sau): số bàn,thời gian...menu... tui sẽ gửi sau...-> pdf
+#thống kê: sẽ thống kế món nào dc order nhiều nhất, khách hàng nào là thân thiết( dựa vào cơ chế tích điểm trên để giảm % hoá đơn cho họ),
+mình sẽ nói rõ sau
+#quản lý hay nhân viên đều phải làm việc từ khung giờ nào -> khung giờ nào ->quản lý sẽ có mục chia time cho nhân viên,
+ nhân viên đăng nhập trước giờ chia ca-> tính 20k/h chẳng
+#hạn. sau khi đến cuối tháng sẽ có thánh toán lương cho nhân viên và quản lý.
+#bọn mình nếu kịp thì có thể bổ sung thêm sau

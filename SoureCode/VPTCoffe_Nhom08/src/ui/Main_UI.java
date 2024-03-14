@@ -14,7 +14,7 @@ public class Main_UI extends JFrame {
 	public Main_UI() {
 		ImageIcon appIcon = new ImageIcon("assets/icon_logo.PNG");
 		setIconImage(appIcon.getImage());
-		setTitle("VPTCoffe | Hệ thống bán hàng coffe");
+		setTitle("VPTCoffe | HỆ THÔNG CỬA HÀNG BÁN CAFE");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
