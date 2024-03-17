@@ -23,6 +23,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.BoxLayout;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class Login_UI extends JFrame implements ActionListener {
 
@@ -41,7 +43,7 @@ public class Login_UI extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 
 		JPanel pnlBody = new JPanel();
-		pnlBody.setBounds(210, 56, 471, 384);
+		pnlBody.setBounds(210, 82, 471, 361);
 		getContentPane().add(pnlBody);
 		pnlBody.setLayout(new BorderLayout(0, 0));
 		
@@ -65,6 +67,7 @@ public class Login_UI extends JFrame implements ActionListener {
 		pnlInput.add(lblMaNv);
 		
 		txtMaNv = new JTextField();
+		txtMaNv.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 17));
 		txtMaNv.setBounds(10, 75, 451, 35);
 		pnlInput.add(txtMaNv);
 		txtMaNv.setColumns(10);
@@ -76,6 +79,7 @@ public class Login_UI extends JFrame implements ActionListener {
 		
 		txtMatKhau = new JTextField();
 		txtMatKhau.setBounds(10, 174, 451, 35);
+		txtMatKhau.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 17));
 		pnlInput.add(txtMatKhau);
 		txtMatKhau.setColumns(10);
 		

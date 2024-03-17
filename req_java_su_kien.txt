@@ -4,7 +4,15 @@ tên app: VPTCoffe
 1 khu vực sẽ có hệ thống gồm phần quyền (nhân viên, quản lý -> 1 khu vực duy nhất 1 quản lý thôi), quản lý sẽ quản lý nhân viên, vẫn bán cho khách được.
 MENU tui sẽ gửi sau, trước tiên ta sẽ bán cứng các món trong đó.
 
-VPTCoffe là hệ thống bán coffe
+
+VPTCoffee là một hệ thống quản lý cà phê linh hoạt và tiện ích, giúp các doanh nghiệp trong ngành hàng cà phê tối ưu hóa hoạt động kinh doanh của mình một cách hiệu quả. 
+Với một loạt các tính năng đa dạng, VPTCoffee mang lại sự tiện lợi và linh hoạt cho việc quản lý và vận hành hàng ngày của quán cà phê.
+Tính năng tích điểm khách hàng thông qua số điện thoại giúp tạo ra một cộng đồng khách hàng trung thành và tăng cường tương tác giữa quán cà phê và khách hàng. 
+Bằng cách này, doanh nghiệp có thể thúc đẩy doanh số bán hàng và tạo ra các chiến lược tiếp thị hiệu quả.
+Ngoài ra, VPTCoffee còn cung cấp các công cụ quản lý nhân viên, cho phép quản lý dễ dàng theo dõi và quản lý thông tin của nhân viên từ việc thêm, sửa đổi đến việc xoá.
+Với các tính năng như thống kê doanh thu và tạo hoá đơn, VPTCoffee giúp cho việc quản lý tài chính và hạch toán trở nên đơn giản và thuận tiện. 
+Quản lý có thể dễ dàng theo dõi doanh thu và lợi nhuận của mình và đưa ra các chiến lược kinh doanh dựa trên dữ liệu chính xác.
+
 
 - đặc tả, ERD, 
 - sơ đồ class
