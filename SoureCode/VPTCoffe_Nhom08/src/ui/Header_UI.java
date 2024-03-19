@@ -3,12 +3,17 @@ package ui;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
 
@@ -17,14 +22,15 @@ import customUI.RoundedButton;
 import java.awt.Component;
 import javax.swing.Box;
 
-public class Header_UI extends JPanel{
+public class Header_UI extends JPanel implements ActionListener{
 	
-	
+	private Main_UI main;
 	private RoundedButton btnLogout;
 	private Thread clock;
 	private JLabel lblTime, lblDate;
 	
-	public Header_UI() {
+	public Header_UI(Main_UI main) {
+		this.main = main;
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnlHeader = new JPanel();
@@ -57,7 +63,7 @@ public class Header_UI extends JPanel{
 		lblName.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
 		pnlControl.add(lblName);
 		
-		JLabel lblChucVu = new JLabel("- QUẢN LÝ");
+		JLabel lblChucVu = new JLabel("- QUẢN LÝ (v1.57)");
 		lblChucVu.setForeground(Color.decode("#ffffff"));
 		lblChucVu.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
 		pnlControl.add(lblChucVu);
@@ -65,12 +71,14 @@ public class Header_UI extends JPanel{
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		pnlControl.add(horizontalStrut);
 		
-		btnLogout = new RoundedButton("", null, 5, 0, 0.5f);
+		btnLogout = new RoundedButton("", null, 35, 0, 0.5f);
 		btnLogout.setForeground(Color.decode("#ffffff"));
 		btnLogout.setBackground(Color.decode("#bf1414"));
 		btnLogout.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
-		btnLogout.setIcon(new ImageScaler("/icon/icon_logout.png", 30, 30).getScaledImageIcon());
+		btnLogout.setIcon(new ImageScaler("/icon/icon_logout.png", 37, 35).getScaledImageIcon());
 		btnLogout.setBorder(null);
+		
+		btnLogout.addActionListener(this);
 		
 		pnlControl.add(btnLogout);
 		
@@ -102,6 +110,21 @@ public class Header_UI extends JPanel{
 
 		clock.start();
 	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o==btnLogout) {
+			int result = JOptionPane.showConfirmDialog(main, "Bạn có muốn đăng xuất khỏi hệ thống?",
+					"ĐĂNG XUẤT HỆ THỐNG", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (result == JOptionPane.YES_OPTION) {
+				main.dispose();
+				Login_UI loginUi = new Login_UI();
+				loginUi.setVisible(true);
+			}
+		}
+		
+	}
+
 }
 
 

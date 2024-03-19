@@ -62,9 +62,10 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnTrangChu = new JMenuItem("  TRANG CHỦ");
 		mnTrangChu.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
 		mnTrangChu.setIcon(new ImageScaler("/icon/icon_home.png", 25, 25).getScaledImageIcon());
-		mnTrangChu.setBackground(Color.decode("#B16E5C"));
+		mnTrangChu.setBackground(Color.decode("#7f483a"));
 		mnTrangChu.setForeground(Color.decode("#ffffff"));
-		mnTrangChu.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnTrangChu.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnTrangChu);
 
 		mnBanHang = new JMenuItem("  BÁN HÀNG");
@@ -72,7 +73,8 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnBanHang.setIcon(new ImageScaler("/icon/icon_banhang.png", 25, 25).getScaledImageIcon());
 		mnBanHang.setBackground(Color.decode("#B16E5C"));
 		mnBanHang.setForeground(Color.decode("#ffffff"));
-		mnBanHang.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnBanHang.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnBanHang);
 
 		mnHoaDon = new JMenuItem("  HOÁ ĐƠN");
@@ -80,7 +82,8 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnHoaDon.setIcon(new ImageScaler("/icon/icon_hoadon.png", 25, 25).getScaledImageIcon());
 		mnHoaDon.setBackground(Color.decode("#B16E5C"));
 		mnHoaDon.setForeground(Color.decode("#ffffff"));
-		mnHoaDon.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnHoaDon.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnHoaDon);
 
 		mnSanPham = new JMenuItem("  SẢN PHẨM");
@@ -88,7 +91,8 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnSanPham.setIcon(new ImageScaler("/icon/icon_sanpham.png", 25, 25).getScaledImageIcon());
 		mnSanPham.setBackground(Color.decode("#B16E5C"));
 		mnSanPham.setForeground(Color.decode("#ffffff"));
-		mnSanPham.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnSanPham.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnSanPham);
 
 		mnThongKe = new JMenuItem("  THỐNG KÊ");
@@ -96,7 +100,8 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnThongKe.setIcon(new ImageScaler("/icon/icon_thongke.png", 25, 25).getScaledImageIcon());
 		mnThongKe.setBackground(Color.decode("#B16E5C"));
 		mnThongKe.setForeground(Color.decode("#ffffff"));
-		mnThongKe.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnThongKe.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnThongKe);
 
 		mnNhanVien = new JMenuItem("  NHÂN VIÊN");
@@ -104,7 +109,8 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnNhanVien.setIcon(new ImageScaler("/icon/icon_nhanvien.png", 25, 25).getScaledImageIcon());
 		mnNhanVien.setBackground(Color.decode("#B16E5C"));
 		mnNhanVien.setForeground(Color.decode("#ffffff"));
-		mnNhanVien.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20), new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
+		mnNhanVien.setBorder(new CompoundBorder(new EmptyBorder(0, 20, 0, 20),
+				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
 		pnlMenu.add(mnNhanVien);
 
 		mnTrangChu.addActionListener(this);
@@ -165,24 +171,78 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		// click hien giao dien Trang Chu
 		if (o == mnTrangChu) {
 			resetPage(new TrangChu_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#7f483a"));
+			mnBanHang.setBackground(Color.decode("#B16E5C"));
+			mnHoaDon.setBackground(Color.decode("#B16E5C"));
+			mnSanPham.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			
 		}
-		
+
 		// click hien giao dien Ban Hang
 		if (o == mnBanHang) {
 			resetPage(new BanHang_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#B16E5C"));
+			mnBanHang.setBackground(Color.decode("#7f483a"));
+			mnHoaDon.setBackground(Color.decode("#B16E5C"));
+			mnSanPham.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			mnNhanVien.setBackground(Color.decode("#B16E5C"));
+			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		// click hien giao dien Hoa don
+		if (o == mnHoaDon) {
+			resetPage(new HoaDon_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#B16E5C"));
+			mnBanHang.setBackground(Color.decode("#B16E5C"));
+			mnHoaDon.setBackground(Color.decode("#7f483a"));
+			mnSanPham.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			mnNhanVien.setBackground(Color.decode("#B16E5C"));
+			
+		}
+		// click hien giao dien san pham
+		if (o == mnSanPham) {
+			resetPage(new SanPham_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#B16E5C"));
+			mnBanHang.setBackground(Color.decode("#B16E5C"));
+			mnHoaDon.setBackground(Color.decode("#B16E5C"));
+			mnSanPham.setBackground(Color.decode("#7f483a"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			mnNhanVien.setBackground(Color.decode("#B16E5C"));
+			
+			
+		}
+		// click hien giao dien thong ke
+		if (o == mnThongKe) {
+			resetPage(new ThongKe_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#B16E5C"));
+			mnBanHang.setBackground(Color.decode("#B16E5C"));
+			mnHoaDon.setBackground(Color.decode("#B16E5C"));
+			mnSanPham.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#7f483a"));
+			mnNhanVien.setBackground(Color.decode("#B16E5C"));
+		}
+		// click hien giao dien nhan vien
+		if (o == mnNhanVien) {
+			resetPage(new NhanVien_UI());
+			
+			mnTrangChu.setBackground(Color.decode("#B16E5C"));
+			mnBanHang.setBackground(Color.decode("#B16E5C"));
+			mnHoaDon.setBackground(Color.decode("#B16E5C"));
+			mnSanPham.setBackground(Color.decode("#B16E5C"));
+			mnThongKe.setBackground(Color.decode("#B16E5C"));
+			mnNhanVien.setBackground(Color.decode("#7f483a"));
+		}
 	}
-	
+
 	// ham chuyen menu
 	public void resetPage(Component cmn) {
 		main.pnlContent.removeAll();

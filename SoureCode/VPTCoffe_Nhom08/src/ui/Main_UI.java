@@ -17,8 +17,9 @@ public class Main_UI extends JFrame {
 	public JPanel pnlContainer, pnlContent;
 
 	public Main_UI() {
-		ImageIcon appIcon = new ImageIcon("assets/icon_logo.PNG");
+		ImageIcon appIcon = new ImageIcon("res/image/icon_logo.PNG");
 		setIconImage(appIcon.getImage());
+		
 		setTitle("VPTCoffe | HỆ THỐNG CỬA HÀNG BÁN CÀ PHÊ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -34,7 +35,7 @@ public class Main_UI extends JFrame {
 		pnlContainer.setLayout(new BorderLayout(0,0));
 		setContentPane(pnlContainer);
 		
-		add(new Header_UI(), BorderLayout.NORTH);
+		add(new Header_UI(this), BorderLayout.NORTH);
 		add(new Menu_UI(this), BorderLayout.WEST);
 		add(pnlContent, BorderLayout.CENTER);
 
