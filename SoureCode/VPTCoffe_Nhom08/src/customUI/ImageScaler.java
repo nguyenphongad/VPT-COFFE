@@ -29,7 +29,8 @@ public class ImageScaler {
             Image newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
             return new ImageIcon(newimg);
     	}else {
-    		filePath = "/image/employee.png";
+    		filePath = "";
+    		System.out.println("loi anh");
     		return getScaledImageIcon();
     	}
     }

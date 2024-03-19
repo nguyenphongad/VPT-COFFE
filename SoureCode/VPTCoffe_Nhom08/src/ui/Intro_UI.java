@@ -17,7 +17,7 @@ import javax.swing.Timer;
 public class Intro_UI extends JFrame {
 
 	private boolean isShowPageLogin = false;
-	ImageIcon appIcon = new ImageIcon("assets/icon_logo.PNG");
+	ImageIcon appIcon = new ImageIcon("res/image/icon_logo.PNG");
 
 	public Intro_UI() {
 
@@ -27,7 +27,7 @@ public class Intro_UI extends JFrame {
 		setIconImage(appIcon.getImage());
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
-		ImageIcon imageIntro = new ImageIcon("assets/logo_VPTCoffe.PNG");
+		ImageIcon imageIntro = new ImageIcon("res/image/logo_VPTCoffe.PNG");
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		JLabel lblImage = new JLabel(imageIntro);
 

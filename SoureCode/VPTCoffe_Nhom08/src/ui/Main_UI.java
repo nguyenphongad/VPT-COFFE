@@ -1,34 +1,50 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 import util.ImportFont;
 
 public class Main_UI extends JFrame {
-	public Font roboto_light, roboto_bold, roboto_regular;
-	private ImportFont impFont;
+	public ImportFont impFont;
+	
+	public JPanel pnlContainer, pnlContent;
 
 	public Main_UI() {
 		ImageIcon appIcon = new ImageIcon("assets/icon_logo.PNG");
 		setIconImage(appIcon.getImage());
-		setTitle("VPTCoffe | HỆ THÔNG CỬA HÀNG BÁN CAFE");
+		setTitle("VPTCoffe | HỆ THỐNG CỬA HÀNG BÁN CÀ PHÊ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
 		
 		// rong full man hinh
-		setExtendedState(JFrame.MAXIMIZED_BOTH); 
+//		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		
+		setSize(1350, 720);
+		setLocationRelativeTo(null);
+		
+		startDefault();
+		
+		pnlContainer = new JPanel();
+		pnlContainer.setLayout(new BorderLayout(0,0));
+		setContentPane(pnlContainer);
+		
+		add(new Header_UI(), BorderLayout.NORTH);
+		add(new Menu_UI(this), BorderLayout.WEST);
+		add(pnlContent, BorderLayout.CENTER);
+
+		pnlContent.add(new TrangChu_UI(), BorderLayout.CENTER);
 	}
 	
-	
-	// ham set lại font
-	public void getFonts() {
-		impFont = new ImportFont();
-		roboto_light = impFont.importFontFromFile("/fonts/Roboto-Light.ttf");
-		roboto_bold = impFont.importFontFromFile("/fonts/Roboto-Bold.ttf");
-		roboto_regular = impFont.importFontFromFile("/fonts/Roboto-Regular.ttf");
+
+	// khoi tao mac dinh khi chay ung dung
+	public void startDefault() {
+		pnlContent = new JPanel(new BorderLayout());
 	}
+	
 }
