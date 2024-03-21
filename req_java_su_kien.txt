@@ -1,6 +1,6 @@
 bọn mình sẽ xây dựng 1 app có map như sau, tuy đây nhập môn thôi nhưng muốn điểm cao và kinh nghiệm cho Tâm học PTUD thì làm sau:
 
-tên app: VPTCoffe
+tên app: VPTCoffee
 1 khu vực sẽ có hệ thống gồm phần quyền (nhân viên, quản lý -> 1 khu vực duy nhất 1 quản lý thôi), quản lý sẽ quản lý nhân viên, vẫn bán cho khách được.
 MENU tui sẽ gửi sau, trước tiên ta sẽ bán cứng các món trong đó.
 
