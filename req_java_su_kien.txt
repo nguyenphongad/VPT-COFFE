@@ -1,10 +1,6 @@
 bọn mình sẽ xây dựng 1 app có map như sau, tuy đây nhập môn thôi nhưng muốn điểm cao và kinh nghiệm cho Tâm học PTUD thì làm sau:
 
-tên app: VPTCoffee
-1 khu vực sẽ có hệ thống gồm phần quyền (nhân viên, quản lý -> 1 khu vực duy nhất 1 quản lý thôi), quản lý sẽ quản lý nhân viên, vẫn bán cho khách được.
-MENU tui sẽ gửi sau, trước tiên ta sẽ bán cứng các món trong đó.
-
-
+Tên app: VPTCoffee | Hệ thống quản lý cà phê
 VPTCoffee là một hệ thống quản lý cà phê linh hoạt và tiện ích, giúp các doanh nghiệp trong ngành hàng cà phê tối ưu hóa hoạt động kinh doanh của mình một cách hiệu quả. 
 Với một loạt các tính năng đa dạng, VPTCoffee mang lại sự tiện lợi và linh hoạt cho việc quản lý và vận hành hàng ngày của quán cà phê.
 Tính năng tích điểm khách hàng thông qua số điện thoại giúp tạo ra một cộng đồng khách hàng trung thành và tăng cường tương tác giữa quán cà phê và khách hàng. 
@@ -14,40 +10,42 @@ Với các tính năng như thống kê doanh thu và tạo hoá đơn, VPTCoffe
 Quản lý có thể dễ dàng theo dõi doanh thu và lợi nhuận của mình và đưa ra các chiến lược kinh doanh dựa trên dữ liệu chính xác.
 
 
-- đặc tả, ERD, 
-- sơ đồ class
-
-sau khi hoàn thành đặc tả -> làm usecase tổng quát
-
-nhân viên--------quản lý-------khách hàng-------sản phẩm-------tài khoản-------hoá đơn
-
-(1) Phong, (2) Vũ, (3) Tâm
-
-(deadline ngày 30 / 3)
-
-# Làm Giao diện
-
-+ tính tiền nhập hàng (1)
-+ tích điểm ( khách hàng-> sdt) (1)
-+ tìm kiếm nhân viên (1)
-
-+ thêm, sửa, xoá nhân viên (2)
-+ thống kế doanh thu (2)
-+ tạo hoá đơn (2)
-
-+ thêm, sửa , xoá đồ uống (3)
-+ tìm kiếm đồ uống (3)
-+ thanh toán (3)
+------------------------------------------------------------------------------------
+Nhiệm vụ cần hoàn thiện trước mắt :
+	- hoàn thành ĐẶC TẢ USECASE, VẼ MÔ HÌNH ERD
+	- hoàn thành SƠ ĐỒ CLASS, USECASE TỔNG QUÁT
+	- cố gắng lấy điểm :  trigger, produced 
 
 
-
-Nhân viên: 
-	_ 
-Quản lý: 
-	_
+I. Nhiệm vụ HẠN NGÀY 30/3/2024
+	cần sửa lại UI: đưa cái Bán Hàng vào Sản Phẩm
 
 
+	- Nhân Viên (thêm nhân viên, sửa nhân viên, xoá nhân viên, tìm kiếm) : TÂM
+		+ quản lý, tìm kiếm
+	- Sản Phẩm: PHONG
+		+ quản lý, tìm kiếm, bán hàng (### tích điểm ###),  thanh toán + select ->       # (tiền mặt, chuyển khoản-> QR của tôi, 50k->bill-> nv chụp->   1233 + ck, 50k, tải )
+	- Hoá đơn + thống kê : VŨ
+		+ quản lý hoá đơn, in hoá đơn, doanh thu, số lượng sản phẩm bán nhiều nhất, ít nhất
 
+	### - nhân viên + sản phẩm
+		+ tích điểm
+		+ thanh toán
+
+
+	--------------------------------------------------
+	   1. Mô tả usecase, làm activity, sequence
+	   2. Mỗi người làm 1 erd, 1 class cá nhân
+	---------------------------------------------------
+	HẠN 30/3 NHÉ, SAU ĐÓ OKE SẼ LÀM TẠP TRUNG LÀM UI
+
+
+demo class :           nhân viên--------quản lý-------khách hàng-------sản phẩm-------tài khoản-------hoá đơn
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+	MINH HOẠ :
 nhân viên đăng nhập ->
 
 tiếp theo , khi khách hàng mua thì mình sẽ quản lý qua sdt khách hàng (mục đích là tích điểm, cái tích điểm mình sẽ gửi cơ chế sau). tiếp theo là quản lý qua sdt
