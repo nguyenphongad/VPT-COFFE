@@ -21,7 +21,7 @@ public class Intro_UI extends JFrame {
 
 	public Intro_UI() {
 
-		setSize(900, 500);
+		setSize(900, 450);
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		setIconImage(appIcon.getImage());

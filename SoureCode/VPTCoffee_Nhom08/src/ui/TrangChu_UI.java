@@ -11,7 +11,7 @@ public class TrangChu_UI extends JPanel{
 		
 		setLayout(new BorderLayout(0, 0));
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageScaler("/image/bgr_trangchu.PNG", 1140, 800).getScaledImageIcon());
+		lblNewLabel.setIcon(new ImageScaler("/image/bgr_trangchu.PNG", 1180, 800).getScaledImageIcon());
 		add(lblNewLabel, BorderLayout.CENTER);
 		
 		

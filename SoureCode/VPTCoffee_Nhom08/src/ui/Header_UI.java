@@ -71,10 +71,10 @@ public class Header_UI extends JPanel implements ActionListener{
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		pnlControl.add(horizontalStrut);
 		
-		btnLogout = new RoundedButton("", null, 35, 0, 0.5f);
+		btnLogout = new RoundedButton("Đăng xuất  ", null, 5, 0, 0.5f);
 		btnLogout.setForeground(Color.decode("#ffffff"));
 		btnLogout.setBackground(Color.decode("#bf1414"));
-		btnLogout.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
+		btnLogout.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
 		btnLogout.setIcon(new ImageScaler("/icon/icon_logout.png", 37, 35).getScaledImageIcon());
 		btnLogout.setBorder(null);
 		
@@ -117,19 +117,19 @@ public class Header_UI extends JPanel implements ActionListener{
 	private String getDayOfWeekString(int dayOfWeekValue) {
 	    switch (dayOfWeekValue) {
 	        case 1:
-	            return "Mon";
+	            return "T2";
 	        case 2:
-	            return "Tue";
+	            return "T3";
 	        case 3:
-	            return "Wed";
+	            return "T4";
 	        case 4:
-	            return "Thu";
+	            return "T5";
 	        case 5:
-	            return "Fri";
+	            return "T6";
 	        case 6:
-	            return "Sat";
+	            return "T7";
 	        case 7:
-	            return "Sun";
+	            return "CN";
 	        default:
 	            return ""; // Trường hợp không xác định
 	    }

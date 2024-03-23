@@ -1,6 +1,6 @@
 package ui;
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout;import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.ImageIcon;
@@ -22,11 +22,12 @@ public class Main_UI extends JFrame {
 		
 		setTitle("VPTCoffee | HỆ THỐNG CỬA HÀNG BÁN CÀ PHÊ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		
 		// rong full man hinh
 //		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		
-		setSize(1350, 720);
+		setSize(1370, 720);
 		setLocationRelativeTo(null);
 		
 		startDefault();
@@ -37,6 +38,7 @@ public class Main_UI extends JFrame {
 		
 		add(new Header_UI(this), BorderLayout.NORTH);
 		add(new Menu_UI(this), BorderLayout.WEST);
+		
 		add(pnlContent, BorderLayout.CENTER);
 
 		pnlContent.add(new TrangChu_UI(), BorderLayout.CENTER);
