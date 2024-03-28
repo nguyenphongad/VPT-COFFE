@@ -93,7 +93,7 @@ public class Login_UI extends JFrame implements ActionListener {
 		pnlInput.add(txtMatKhau);
 		txtMatKhau.setColumns(10);
 		
-		btnLogin = new RoundedButton("ĐĂNG NHẬP",null, 5, 0, 2f);
+		btnLogin = new RoundedButton("ĐĂNG NHẬP",null, 10, 0, 2f);
 		btnLogin.setIcon(new ImageScaler("/icon/icon_login.PNG", 28, 25).getScaledImageIcon());
 		btnLogin.setBackground(Color.decode("#B16E5C"));
 		btnLogin.setForeground(Color.decode("#ffffff"));
