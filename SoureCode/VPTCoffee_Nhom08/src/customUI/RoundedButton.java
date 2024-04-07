@@ -39,7 +39,8 @@ public class RoundedButton extends JButton {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (!this.isEnabled()) {
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        	 float validAlpha = Math.max(0.0f, Math.min(alpha, 1.0f));
+             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, validAlpha));
         }
         g2d.setColor(getBackground());
         g2d.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), gap, gap));

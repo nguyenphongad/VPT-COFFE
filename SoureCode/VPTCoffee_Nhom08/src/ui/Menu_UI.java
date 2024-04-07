@@ -63,7 +63,7 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnTrangChu = new JMenuItem("  TRANG CHỦ");
 		mnTrangChu.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
 		mnTrangChu.setIcon(new ImageScaler("/icon/icon_home.png", 25, 25).getScaledImageIcon());
-		mnTrangChu.setBackground(Color.decode("#7f483a"));
+		mnTrangChu.setBackground(Color.decode("#B16E5C"));
 		mnTrangChu.setForeground(Color.decode("#ffffff"));
 		mnTrangChu.setBorder(new CompoundBorder(new EmptyBorder(0, 10, 0, 10),
 				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
@@ -81,7 +81,7 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnSanPham = new JMenuItem("  SẢN PHẨM");
 		mnSanPham.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
 		mnSanPham.setIcon(new ImageScaler("/icon/icon_sanpham.png", 25, 25).getScaledImageIcon());
-		mnSanPham.setBackground(Color.decode("#B16E5C"));
+		mnSanPham.setBackground(Color.decode("#7f483a"));
 		mnSanPham.setForeground(Color.decode("#ffffff"));
 		mnSanPham.setBorder(new CompoundBorder(new EmptyBorder(0, 10, 0, 10),
 				new MatteBorder(0, 0, 1, 0, Color.decode("#f2f2f2"))));
@@ -220,6 +220,7 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 			mnSanPham.setBackground(Color.decode("#7f483a"));
 			mnThongKe.setBackground(Color.decode("#B16E5C"));
 			mnNhanVien.setBackground(Color.decode("#B16E5C"));
+			
 			
 			
 		}
