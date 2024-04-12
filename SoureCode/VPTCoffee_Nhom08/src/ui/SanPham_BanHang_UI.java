@@ -27,7 +27,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
+
+import customUI.ImageScaler;
 import customUI.RoundedButton;
+import customUI.RoundedPanel;
 import entity.SanPham;
 
 import java.awt.Color;
@@ -43,7 +46,6 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private JTextField txtTimSP;
 	private RoundedButton btnTimSP;
 
-	private RoundedButton btnThongTinSP;
 	private ArrayList<SanPham> productList;
 	private RoundedButton btnAddHD, btnXoa, btnHuy, btnThanhToan, btnTimKH;
 
@@ -126,7 +128,9 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		pnlTableSP.setLayout(new BorderLayout(0, 0));
 
 		JPanel pnlRenderSP = new JPanel();
+		pnlRenderSP.setBackground(Color.decode("#e0e0e0"));
 		pnlRenderSP.setBorder(new EmptyBorder(5, 5, 5, 5));
+		pnlRenderSP.setLayout(new GridLayout(0, 3, 5, 5));
 
 		productList = new ArrayList<>();
 
@@ -137,30 +141,77 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		productList.add(new SanPham("SP00005", "Cafe Cappuccinoư", "coffee", false, "coffee_cappuccino.PNG", 55000));
 		productList.add(new SanPham("SP00006", "Cafe Cappuccino2", "coffee", true, "coffee_cappuccino.PNG", 55000));
 		productList.add(new SanPham("SP00007", "Cafe Cappuccino2", "coffee", true, "coffee_cappuccino.PNG", 55000));
+		productList.add(new SanPham("SP00008", "Cafe Cappuccino2", "coffee", true, "coffee_cappuccino.PNG", 55000));
+		productList.add(new SanPham("SP00009", "Cafe Cappuccino2", "coffee", true, "coffee_cappuccino.PNG", 55000));
+		productList.add(new SanPham("SP000010", "Cafe Cappuccino2", "coffee", true, "coffee_cappuccino.PNG", 55000));
 
 		for (SanPham product : productList) {
 
 			final SanPham finalProduct = product;
-
-		 RoundedButton btnThongTinSP = new RoundedButton("<html>" + "<center>" + "<div style='width:120px;padding:5px 0px;'>"
-					+ "<img src='file:res\\image_SanPham\\" + finalProduct.getAnhSP() + "'"
-					+ "width='155' height='155'>" + "<br>"
-					+ (finalProduct.isTrangThai() ? "" : "<div style='color:red;'>Ngừng bán</div>") + "<i>"
-					+ finalProduct.getTenSP() + "</i>" + "<br>" + decimalFormat.format(finalProduct.getDonGia()) + " đ"
-					+ "<br>" + "</div>" + "</center>" + "</html>", null, 10, 0, 0.8f);
-
-			btnThongTinSP.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 18));
-			btnThongTinSP.setForeground(Color.decode("#000000"));
-			btnThongTinSP.setBackground(Color.decode("#ffffff"));
-			btnThongTinSP.setBorder(new MatteBorder(2, 2, 2, 2, Color.decode("#B16E5C")));
-
-			btnThongTinSP.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-
-					if (!finalProduct.isTrangThai()) {
-						btnThongTinSP.setEnabled(false);
+			
+			RoundedPanel pnlThongTinSP = new RoundedPanel(null, 10, 0);
+			pnlThongTinSP.setLayout( new BorderLayout(0,0));
+			pnlThongTinSP.setBorder(new EmptyBorder(10, 10, 10, 10));
+			pnlThongTinSP.setForeground(Color.decode("#000000"));
+			pnlThongTinSP.setBackground(Color.decode("#ffffff"));
+			pnlThongTinSP.setPreferredSize(new Dimension(100, 220));
+			
+			JPanel pnlImageTTSP = new JPanel();
+			pnlThongTinSP.add(pnlImageTTSP); 
+			pnlImageTTSP.setLayout(null);
+			
+			
+			// lbl icon ngung ban
+			JLabel lblImageSPNgungBan = new JLabel();
+			lblImageSPNgungBan.setIcon(new ImageScaler("/icon/icon_ngungban.png", 110, 30).getScaledImageIcon());
+			lblImageSPNgungBan.setBounds(24, 110, 110, 30);
+			
+			
+			JPanel pnlBottomTTSP  = new JPanel();
+			pnlBottomTTSP.setLayout(new BorderLayout());
+			pnlBottomTTSP.setBackground(Color.decode("#ffffff"));
+			
+			
+			// check ngung ban
+			if(finalProduct.isTrangThai()){
+				
+			}else {
+				pnlThongTinSP.setBackground(Color.decode("#ede1de"));
+				pnlBottomTTSP.setBackground(Color.decode("#ede1de"));
+				pnlImageTTSP.add(lblImageSPNgungBan);
+			}
+			
+			
+			// them anh san pham
+			JLabel lblImageTTSP = new JLabel();
+			lblImageTTSP.setIcon(new ImageScaler("/image_SanPham/" + finalProduct.getAnhSP(), 160, 160).getScaledImageIcon());
+			lblImageTTSP.setBounds(0, 0, 250, 160);
+			pnlImageTTSP.add(lblImageTTSP);
+			
+			
+			
+			pnlThongTinSP.add(pnlBottomTTSP, BorderLayout.SOUTH);
+			
+			
+			JLabel lblTTTenSP = new JLabel("<html><i>" + finalProduct.getTenSP() + "</i></html>");
+			lblTTTenSP.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTTTenSP.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 18));
+			pnlBottomTTSP.add(lblTTTenSP, BorderLayout.CENTER);
+			
+			
+			JLabel lblTTDonGia = new JLabel(String.valueOf(decimalFormat.format(finalProduct.getDonGia())));
+			lblTTDonGia.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTTDonGia.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+			pnlBottomTTSP.add(lblTTDonGia, BorderLayout.SOUTH);
+			
+			
+			
+			
+			pnlThongTinSP.addMouseListener(new MouseListener() {
+	            @Override
+	            public void mouseClicked(MouseEvent e) {
+	                
+	            	if (!finalProduct.isTrangThai()) {
 						return;
 					}
 					
@@ -196,7 +247,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 							break;
 						}
 					}
-
+					
 					if (!existed) {
 						String[] row = new String[6];
 						row[0] = String.valueOf(dtbModelODSP.getRowCount() + 1);
@@ -211,21 +262,52 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 						tinhToanGiaTri();
 					}
+	            	
+	            }
+	            
+	            @Override
+	            public void mousePressed(MouseEvent e) {
+	            }
 
-				}
+	            @Override
+	            public void mouseReleased(MouseEvent e) {
+	            }
+
+	            @Override
+	            public void mouseEntered(MouseEvent e) {
+	            	
+	            	if(finalProduct.isTrangThai()){
+	            		pnlThongTinSP.setBackground(Color.decode("#f4f4f4"));
+	            		pnlBottomTTSP.setBackground(Color.decode("#f4f4f4"));
+	            		
+	    			}else {
+	    			
+	    			}
+	            }
+
+	            @Override
+	            public void mouseExited(MouseEvent e) {
+	            	if(finalProduct.isTrangThai()){
+		            	pnlThongTinSP.setBackground(Color.decode("#ffffff"));
+		            	pnlBottomTTSP.setBackground(Color.decode("#ffffff"));
+	            	}else {
+	            		
+	            	}
+	            }
 			});
-
-			pnlRenderSP.add(btnThongTinSP);
+			
+			
+			pnlRenderSP.add(pnlThongTinSP);
 
 		}
-		pnlRenderSP.setBackground(Color.decode("#e0e0e0"));
-		pnlRenderSP.setLayout(new GridLayout(0, 3, 5, 5));
+		
+		
 
 		JScrollPane scrollPane = new JScrollPane(pnlRenderSP, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(50);
 		scrollPane.getHorizontalScrollBar().setUnitIncrement(100);
-		scrollPane.getVerticalScrollBar().setBlockIncrement(30);
+		scrollPane.getVerticalScrollBar().setBlockIncrement(50);
 		scrollPane.getHorizontalScrollBar().setBlockIncrement(100);
 		pnlTableSP.add(scrollPane, BorderLayout.CENTER);
 
