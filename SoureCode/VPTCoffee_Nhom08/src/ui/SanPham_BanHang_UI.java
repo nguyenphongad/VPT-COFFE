@@ -340,11 +340,11 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 		pnlTitleHD.add(btnMaHD, BorderLayout.WEST);
 
-		// action them
-		btnAddHD = new RoundedButton("+ TẠO HOÁ ĐƠN", null, 10, 0, 3f);
-		btnAddHD.setBackground(Color.decode("#ffffff"));
-		btnAddHD.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
-		pnlTitleHD.add(btnAddHD, BorderLayout.EAST);
+//		// action them
+//		btnAddHD = new RoundedButton("+ TẠO HOÁ ĐƠN", null, 10, 0, 3f);
+//		btnAddHD.setBackground(Color.decode("#ffffff"));
+//		btnAddHD.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
+//		pnlTitleHD.add(btnAddHD, BorderLayout.EAST);
 
 		JPanel pnlListSpOrder = new JPanel();
 		pnlRight.add(pnlListSpOrder, BorderLayout.CENTER);
