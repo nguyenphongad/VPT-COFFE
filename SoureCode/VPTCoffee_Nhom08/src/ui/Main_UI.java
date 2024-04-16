@@ -1,14 +1,13 @@
 package ui;
 
-import java.awt.BorderLayout;import java.awt.Color;
-import java.awt.Font;
+import java.awt.BorderLayout;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 
+import connectDB.ConnectDB;
 import util.ImportFont;
 
 public class Main_UI extends JFrame {
@@ -22,6 +21,14 @@ public class Main_UI extends JFrame {
 		
 		setTitle("VPTCoffee | HỆ THỐNG CỬA HÀNG BÁN CÀ PHÊ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		try {
+			 ConnectDB.getInstance().connect();
+//			System.out.println("connect database success");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		
 		// rong full man hinh
