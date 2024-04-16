@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -31,10 +32,12 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXDatePicker;
@@ -50,6 +53,7 @@ import java.awt.Color;
 
 import javax.swing.border.CompoundBorder;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -87,13 +91,13 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private RoundedButton btnXoaRong;
 	private RoundedButton btnDangKy;
 	
-	
+	DecimalFormat decimalFormat = new DecimalFormat("#,##0");
 
 //	----------------------------------------------------------------
 
 	public SanPham_BanHang_UI() {
 		setLayout(new BorderLayout(0, 0));
-		DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+		
 
 		JPanel pnlContainer = new JPanel();
 		pnlContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -392,6 +396,9 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		dtblODSP.getColumnModel().getColumn(3).setPreferredWidth(80);
 		dtblODSP.getColumnModel().getColumn(4).setPreferredWidth(50);
 		dtblODSP.getColumnModel().getColumn(5).setPreferredWidth(110);
+		
+		
+		
 
 		// ham an delete xoa dong
 		dtblODSP.addKeyListener(new KeyAdapter() {
@@ -424,6 +431,19 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 				new EmptyBorder(5, 5, 5, 5)));
 		pnlNoteOrderSP.add(pnlNoteLeft);
 		pnlNoteLeft.setLayout(new BoxLayout(pnlNoteLeft, BoxLayout.Y_AXIS));
+		
+		
+//		
+//		JPanel pnlLine0 = new JPanel();
+//		pnlNoteLeft.add(pnlLine0);
+//		pnlLine0.setLayout(new BorderLayout(0, 0));
+//		pnlLine0.setBorder(new EmptyBorder(5, 0, 10, 0));
+//		
+//		JCheckBox cnbTichDiem = new JCheckBox("Tích Điểm");
+//		cnbTichDiem.setSelected(true);
+//		cnbTichDiem.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+//		pnlLine0.add(cnbTichDiem, BorderLayout.WEST);
+		
 
 		JPanel pnlLine1 = new JPanel();
 		pnlNoteLeft.add(pnlLine1);
@@ -660,7 +680,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		pnlActionLeft.setLayout(new GridLayout(0, 2, 5, 0));
 
 		// btn huỷ
-		btnHuy = new RoundedButton("Huỷ", null, 10, 0, 3f);
+		btnHuy = new RoundedButton("Huỷ T.Điểm", null, 10, 0, 3f);
 		btnHuy.setBackground(Color.decode("#ffffff"));
 		btnHuy.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
 		pnlActionLeft.add(btnHuy);
@@ -687,7 +707,8 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 		btnXoa.addActionListener(this);
 		btnTimKH.addActionListener(this);
-		
+		btnHuy.addActionListener(this);
+		btnThanhToan.addActionListener(this);
 		
 		
 		xoaRong();
@@ -695,24 +716,6 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 	}
 
-	private Integer convertToInteger(String value) {
-		try {
-			return Integer.parseInt(value);
-		} catch (NumberFormatException e) {
-			alertNotification("Giá trị nhập vào không hợp lệ");
-			return null;
-		}
-	}
-
-	private Double convertToDouble(String value) {
-		try {
-			return Double.parseDouble(value);
-
-		} catch (NumberFormatException e) {
-			alertNotification("Giá trị nhập vào không hợp lệ");
-			return null;
-		}
-	}
 
 	public class CustomTableModel extends DefaultTableModel {
 		private boolean[] editableColumns;
@@ -858,6 +861,34 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 				 kiemTraTichDiemKH();
 			}
 		}
+		
+		if(o==btnHuy) {
+			txtSdtKH.setText("");
+			txtTenKH.setText("");
+			txtDiemTL.setText("");
+			txtChietKhau.setText("");
+			tinhToanGiaTri();
+		}
+		
+		if(o==btnThanhToan) {
+			if(dtbModelODSP.getRowCount()==0) {
+				alertNotification("CẦN CÓ ÍT NHẤT 1 SẢN PHẨM ĐỂ THANH TOÁN !");
+			}else {
+				String tenkh = txtTenKH.getText();
+				String diemTl = txtDiemTL.getText();
+				if(tenkh.equalsIgnoreCase("") && diemTl.contentEquals("")) {
+					int result = JOptionPane.showConfirmDialog(new JFrame(), "HOÁ ĐƠN KHÔNG CÓ TÀI KHOẢN TÍCH ĐIỂM, "
+							+ "TIẾP TỤC ?",
+							"", JOptionPane.YES_NO_OPTION);
+					if (result == JOptionPane.YES_OPTION) {
+						thanhToanHoaDon();
+					}
+				}else {
+					thanhToanHoaDon();
+				}
+			}
+		}
+		
 
 	}
 
@@ -1072,6 +1103,222 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		}
 		return "?";
 	}
+	// thanh toan hoa don
+	public void thanhToanHoaDon() {
+		String phuongThuc = (String) cmbPhuongThucThanhToan.getSelectedItem();
+        if (phuongThuc.equals("Chuyển khoản")) {
+        	xacNhanThanhToan();
+        }else if (phuongThuc.equals("Tiền mặt")){
+        	if(txtTienKhachDua.getText().equalsIgnoreCase("")) {
+        		alertNotification("CẦN NHẬP TIỀN KHÁCH ĐƯA");
+        	}else {
+        		xacNhanThanhToan();
+        	}
+        }
+	}
+	
+	// dialog xac nhan thanh toan
+	public void xacNhanThanhToan() {
+		JDialog dlQR = new JDialog(new JFrame(), "THANH TOÁN CHUYỂN KHOẢN",
+				JDialog.ModalityType.APPLICATION_MODAL);
+		dlQR.setSize(1200,640);
+		dlQR.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dlQR.setLocationRelativeTo(null);
+		dlQR.setLayout(new BorderLayout());
+		
+		
+		JPanel pnlQtitle = new JPanel();
+		pnlQtitle.setBackground(new Color(255, 255, 255));
+		dlQR.add(pnlQtitle, BorderLayout.NORTH);
+		
+		JLabel lblTtitleQuet = new JLabel("QUÉT MÃ ĐỂ THANH TOÁN");
+		lblTtitleQuet.setFont(new Font("Segoe UI Semibold", Font.BOLD, 25));
+		pnlQtitle.add(lblTtitleQuet);
+		
+		JPanel pnlQuet = new JPanel();
+		pnlQuet.setBackground(new Color(255, 255, 255));
+		pnlQuet.setBorder(new EmptyBorder(10, 10, 20, 40));
+		dlQR.add(pnlQuet, BorderLayout.CENTER);
+		pnlQuet.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		JPanel pnlInQR = new JPanel();
+		pnlInQR.setBackground(new Color(255, 255, 255));
+		pnlQuet.add(pnlInQR);
+		pnlInQR.setLayout(new BorderLayout(0, 0));
+		
+		JPanel pnlShowQR = new JPanel();
+		pnlShowQR.setBackground(new Color(255, 255, 255));
+		pnlInQR.add(pnlShowQR, BorderLayout.SOUTH);
+		pnlShowQR.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lbltaikhoan = new JLabel("109999999 - VTPCoffee");
+		lbltaikhoan.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
+		lbltaikhoan.setHorizontalAlignment(SwingConstants.CENTER);
+		pnlShowQR.add(lbltaikhoan, BorderLayout.NORTH);
+		
+		JPanel pnlImageQR = new JPanel();
+		pnlImageQR.setBackground(new Color(255, 255, 255));
+		pnlInQR.add(pnlImageQR, BorderLayout.NORTH);
+		
+		JLabel lblMaQR = new JLabel("");
+		lblMaQR.setIcon(new ImageScaler("/image/QR_thanhToan.png", 430, 420).getScaledImageIcon());
+		pnlImageQR.add(lblMaQR);
+		
+		JPanel pnlLeftQR = new JPanel();
+		pnlLeftQR.setBackground(new Color(255, 255, 255));
+		pnlQuet.add(pnlLeftQR);
+		pnlLeftQR.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblChiTiet = new JLabel("CHI TIẾT HOÁ ĐƠN");
+		lblChiTiet.setBackground(new Color(255, 255, 255));
+		lblChiTiet.setHorizontalAlignment(SwingConstants.CENTER);
+		lblChiTiet.setFont(new Font("Segoe UI Semibold", Font.BOLD, 25));
+		lblChiTiet.setBorder(new EmptyBorder(0, 0, 20, 0));
+		pnlLeftQR.add(lblChiTiet, BorderLayout.NORTH);
+		
+		JPanel pnlChiTiet = new JPanel();
+		pnlLeftQR.add(pnlChiTiet, BorderLayout.CENTER);
+		pnlChiTiet.setLayout(new GridLayout(0, 3, 0, 0));
+		
+		JPanel pnl_11 = new JPanel();
+		pnl_11.setBackground(new Color(255, 255, 255));
+		pnl_11.setPreferredSize(new Dimension(120, 120));
+		pnlChiTiet.add(pnl_11);
+		pnl_11.setLayout(new BoxLayout(pnl_11, BoxLayout.Y_AXIS));
+		
+		JLabel lblTenSP = new JLabel("TÊN SẢN PHẨM");
+		lblTenSP.setBorder(new EmptyBorder(5, 0, 15, 0));
+		lblTenSP.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+		lblTenSP.setPreferredSize(new Dimension(70, 40));
+		pnl_11.add(lblTenSP);
+		
+		
+		JPanel pnl_22 = new JPanel();
+		pnl_22.setBackground(new Color(255, 255, 255));
+		pnl_22.setPreferredSize(new Dimension(50, 50));
+		pnlChiTiet.add(pnl_22);
+		pnl_22.setLayout(new BoxLayout(pnl_22, BoxLayout.Y_AXIS));
+		
+		JLabel lblSoLuong = new JLabel("<html><div style='text-align: right'>" + "SỐ LƯỢNG"+ "</div></html>");
+		lblSoLuong.setBorder(new EmptyBorder(5, 0, 15, 0));
+		lblSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSoLuong.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+		pnl_22.add(lblSoLuong);
+		
+		
+		JPanel pnl_33 = new JPanel();
+		pnl_33.setBackground(new Color(255, 255, 255));
+		pnlChiTiet.add(pnl_33);
+		pnl_33.setLayout(new BoxLayout(pnl_33, BoxLayout.Y_AXIS));
+		
+		JLabel lblThanhTien = new JLabel("<html><div style='text-align: right'>" + "THÀNH TIỀN"+ "</div></html>");
+		lblThanhTien.setBorder(new EmptyBorder(5, 0, 15, 0));
+		lblThanhTien.setHorizontalAlignment(SwingConstants.CENTER);
+		lblThanhTien.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
+		lblThanhTien.setPreferredSize(pnl_33.getPreferredSize());
+		pnl_33.add(lblThanhTien);
+		
+		JPanel pnlAction = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) pnlAction.getLayout();
+		flowLayout.setVgap(10);
+		flowLayout.setHgap(15);
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		pnlAction.setBackground(Color.decode("#d3d3d3"));
+		dlQR.add(pnlAction, BorderLayout.SOUTH);
+		
+		JButton btnHuyGD = new RoundedButton("HUỶ GIAO DỊCH", null, 10, 0, 0.3f);
+		btnHuyGD.setBackground(Color.decode("#ffffff"));
+		btnHuyGD.setForeground(Color.decode("#d62f2f"));
+		btnHuyGD.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlAction.add(btnHuyGD);
+		
+		Component horizontalStrut = Box.createHorizontalStrut(560);
+		pnlAction.add(horizontalStrut);
+		
+		
+		JCheckBox cbInHoaDon = new JCheckBox("In Hoá Đơn");
+		cbInHoaDon.setFont(new Font("Segoe UI Semibold", Font.BOLD, 19));
+		cbInHoaDon.setSelected(true);
+		pnlAction.add(cbInHoaDon);
+		
+		
+		Component horizontalStrut1 = Box.createHorizontalStrut(10);
+		pnlAction.add(horizontalStrut1);
+		
+		
+		JButton btnXacNhanTT = new RoundedButton("XÁC NHẬN ĐÃ THANH TOÁN", null, 10, 0, 0.3f);
+		btnXacNhanTT.setBackground(Color.decode("#0065F7"));
+		btnXacNhanTT.setForeground(Color.decode("#ffffff"));
+		btnXacNhanTT.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlAction.add(btnXacNhanTT);
+		
+		
+		
+		
+		
+		
+		List<JLabel> ListTenSP = new ArrayList<>();
+		List<JLabel> ListSoLuongSP = new ArrayList<>();
+		List<JLabel> ListThanhTienSP = new ArrayList<>();
+
+		for (int i = 0; i < dtbModelODSP.getRowCount(); i++) {
+		    String tenSP = dtbModelODSP.getValueAt(i, 2).toString(); 
+		    JLabel lblTenSPItem = new JLabel("<html><i>" + tenSP + "</i></html>");
+		    lblTenSPItem.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		    ListTenSP.add(lblTenSPItem);
+
+		    String soLuong = dtbModelODSP.getValueAt(i, 4).toString(); 
+		    JLabel lblSoLuongItem = new JLabel("<html><div style='width:105px;text-align: right'>" + "x"+soLuong+ "</div></html>");
+		    lblSoLuongItem.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		    ListSoLuongSP.add(lblSoLuongItem);
+
+		    String thanhTien = dtbModelODSP.getValueAt(i, 5).toString(); 
+		    JLabel lblThanhTienItem = new JLabel("<html><div style='width:115px;text-align: right'>" +thanhTien+ "</div></html>");
+		    lblThanhTienItem.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		    ListThanhTienSP.add(lblThanhTienItem);
+		    
+		   
+		    
+		}
+
+		for (JLabel label : ListTenSP) {
+		    pnl_11.add(label);
+		}
+
+		for (JLabel label : ListSoLuongSP) {
+		    pnl_22.add(label);
+		}
+
+		for (JLabel label : ListThanhTienSP) {
+		    pnl_33.add(label);
+		}
+		
+		
+		
+		 JLabel lblTongTienThanhToan = new JLabel("<html><div style='text-align: right'>" + "TỔNG TIỀN : "+ "</div></html>");
+		 lblTongTienThanhToan.setFont(new Font("Segoe UI Semibold", Font.BOLD, 19));
+		 lblTongTienThanhToan.setHorizontalAlignment(SwingConstants.CENTER);
+		 lblTongTienThanhToan.setBorder(new EmptyBorder(10, 0, 0, 0));
+		 pnl_22.add(lblTongTienThanhToan);
+		 
+		 JLabel lblNumberTongTienThanhToan = new JLabel("<html><div style='width:115px;text-align: right'>" +
+		 txtTongTienThanhToan.getText()+ "</div></html>");
+		 lblNumberTongTienThanhToan.setForeground(Color.decode("#9b5353"));
+		 lblNumberTongTienThanhToan.setFont(new Font("Segoe UI Semibold", Font.BOLD, 19));
+		 lblNumberTongTienThanhToan.setBorder(new EmptyBorder(10, 0, 0, 0));
+		 pnl_33.add(lblNumberTongTienThanhToan);
+		    
+
+		
+		
+		
+		dlQR.setVisible(true);
+		
+		
+	}
+	
+	
+	
 	
 	
 	
@@ -1111,6 +1358,26 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 	    return quotient * 1000;
     }
+	
+
+	private Integer convertToInteger(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			alertNotification("Giá trị nhập vào không hợp lệ");
+			return null;
+		}
+	}
+
+	private Double convertToDouble(String value) {
+		try {
+			return Double.parseDouble(value);
+
+		} catch (NumberFormatException e) {
+			alertNotification("Giá trị nhập vào không hợp lệ");
+			return null;
+		}
+	}
 
 	// ALERT
 
