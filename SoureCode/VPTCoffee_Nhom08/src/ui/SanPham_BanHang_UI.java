@@ -23,6 +23,7 @@ import java.util.List;
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.border.EmptyBorder;
@@ -35,8 +36,13 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -55,6 +61,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 
 import javax.swing.JTextArea;
@@ -80,7 +87,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private JTextField txtTongTienSP;
 	private JTextField txtTienChietKhau;
 	private JTextField txtTongTienThanhToan;
-	private JTextField txtTienKhachDua;
+	private JSpinner txtTienKhachDua;
 	private JTextField txtTienThoi;
 	private JTextArea teaGhiChu;
 	private JComboBox<String> cmbPhuongThucThanhToan;
@@ -91,7 +98,13 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private RoundedButton btnXoaRong;
 	private RoundedButton btnDangKy;
 	
+
+	
+	
 	DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+	private RoundedButton btnHuyGD;
+	private JCheckBox cbInHoaDon;
+	private RoundedButton btnXacNhanTT;
 
 //	----------------------------------------------------------------
 
@@ -572,10 +585,14 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		    public void actionPerformed(ActionEvent e) {
 		        String phuongThuc = (String) cmbPhuongThucThanhToan.getSelectedItem();
 		        if (phuongThuc.equals("Chuyển khoản")) {
-		            txtTienKhachDua.setEditable(false);
+		            txtTienKhachDua.setEnabled(false);
 		            btnThanhToan.setText("TIẾP TỤC");
+		            txtTienKhachDua.setValue(0);
+		            txtTienThoi.setText("0");
+		            
+		            
 		        } else if (phuongThuc.equals("Tiền mặt")) {
-		            txtTienKhachDua.setEditable(true);
+		            txtTienKhachDua.setEnabled(true);
 		            btnThanhToan.setText("THANH TOÁN");
 		        }
 		    }
@@ -646,13 +663,23 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		lblTienKhachDua.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		pnlL5L1.add(lblTienKhachDua, BorderLayout.NORTH);
 
-		txtTienKhachDua = new JTextField();
-		txtTienKhachDua.setEditable(false);
-		txtTienKhachDua.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		
+		SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
+		txtTienKhachDua = new JSpinner(spinnerModel);
+		txtTienKhachDua.setEnabled(false);
+//		txtTienKhachDua.setHorizontalAlignment(SwingConstants.RIGHT);
 		txtTienKhachDua.setBackground(Color.decode("#f7f7f7"));
 		txtTienKhachDua.setFont(new Font("Segoe UI Semibold", Font.BOLD, 17));
 		pnlL5L1.add(txtTienKhachDua);
-		txtTienKhachDua.setColumns(10);
+//		txtTienKhachDua.setColumns(10);
+		
+		
+		
+		
+		
+		
+		
 
 		JPanel pnlL5L2 = new JPanel();
 		pnlL5.add(pnlL5L2);
@@ -711,6 +738,8 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		btnThanhToan.addActionListener(this);
 		
 		
+		
+		
 		xoaRong();
 //		tinhToanGiaTri();
 
@@ -743,7 +772,6 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 					tinhToanGiaTri();
 					return;
 				} else {
-					DecimalFormat decimalFormat = new DecimalFormat("#,##0");
 					double donGia = 0;
 					try {
 						donGia = decimalFormat.parse(getValueAt(row, 3).toString()).doubleValue();
@@ -771,9 +799,8 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 	// hàm tính các giá trị thanh toán
 	public void tinhToanGiaTri() {
-		DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-		double TongThanhTien = 0;
 
+		double TongThanhTien = 0;
 		// tinh tong thanh tien san pham
 		for (int i = 0; i < dtbModelODSP.getRowCount(); i++) {
 			Object getThanhTien = dtbModelODSP.getValueAt(i, 5);
@@ -814,7 +841,37 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		
 		txtTongTienThanhToan.setText(decimalFormat.format(tongTien));
 		
+		
+		JFormattedTextField txtField = ((JSpinner.DefaultEditor) txtTienKhachDua.getEditor()).getTextField();
+		txtField.getDocument().addDocumentListener(new DocumentListener() {
+		    @Override
+		    public void insertUpdate(DocumentEvent e) {
+		        updateTienThoi();
+		    }
 
+		    @Override
+		    public void removeUpdate(DocumentEvent e) {
+		        updateTienThoi();
+		    }
+
+		    @Override
+		    public void changedUpdate(DocumentEvent e) {
+		        updateTienThoi();
+		    }
+
+		    private void updateTienThoi() {
+		        try {
+		            double tienKhachDua = ((Number) txtTienKhachDua.getValue()).doubleValue();
+		            String stTongTien = txtTongTienThanhToan.getText();
+		            double fmTongTien = decimalFormat.parse(stTongTien).doubleValue();
+		            double tienThoi = tienKhachDua - fmTongTien;
+		            txtTienThoi.setText(decimalFormat.format(tienThoi));
+		        } catch (ParseException ex) {
+		            ex.printStackTrace();
+		        }
+		    }
+		});
+		
 	}
 
 	@Override
@@ -1109,7 +1166,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
         if (phuongThuc.equals("Chuyển khoản")) {
         	xacNhanThanhToan();
         }else if (phuongThuc.equals("Tiền mặt")){
-        	if(txtTienKhachDua.getText().equalsIgnoreCase("")) {
+        	if(txtTienKhachDua.getValue() == null) {
         		alertNotification("CẦN NHẬP TIỀN KHÁCH ĐƯA");
         	}else {
         		xacNhanThanhToan();
@@ -1226,17 +1283,28 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		pnlAction.setBackground(Color.decode("#d3d3d3"));
 		dlQR.add(pnlAction, BorderLayout.SOUTH);
 		
-		JButton btnHuyGD = new RoundedButton("HUỶ GIAO DỊCH", null, 10, 0, 0.3f);
+		btnHuyGD = new RoundedButton("HUỶ GIAO DỊCH", null, 10, 0, 0.3f);
 		btnHuyGD.setBackground(Color.decode("#ffffff"));
 		btnHuyGD.setForeground(Color.decode("#d62f2f"));
 		btnHuyGD.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
 		pnlAction.add(btnHuyGD);
 		
+		
+		btnHuyGD.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dlQR.dispose();
+			}
+		});
+		
+		
+		
 		Component horizontalStrut = Box.createHorizontalStrut(560);
 		pnlAction.add(horizontalStrut);
 		
 		
-		JCheckBox cbInHoaDon = new JCheckBox("In Hoá Đơn");
+		cbInHoaDon = new JCheckBox("In Hoá Đơn");
 		cbInHoaDon.setFont(new Font("Segoe UI Semibold", Font.BOLD, 19));
 		cbInHoaDon.setSelected(true);
 		pnlAction.add(cbInHoaDon);
@@ -1246,7 +1314,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		pnlAction.add(horizontalStrut1);
 		
 		
-		JButton btnXacNhanTT = new RoundedButton("XÁC NHẬN ĐÃ THANH TOÁN", null, 10, 0, 0.3f);
+		btnXacNhanTT = new RoundedButton("XÁC NHẬN ĐÃ THANH TOÁN", null, 10, 0, 0.3f);
 		btnXacNhanTT.setBackground(Color.decode("#0065F7"));
 		btnXacNhanTT.setForeground(Color.decode("#ffffff"));
 		btnXacNhanTT.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
@@ -1339,7 +1407,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		txtTongTienSP.setText("0");
 		txtTienChietKhau.setText("0");
 		txtTongTienThanhToan.setText("0");
-		txtTienKhachDua.setText("");
+		txtTienKhachDua.setValue(0);
 		txtTienThoi.setText("0");
 
 		tinhToanGiaTri();

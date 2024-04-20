@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.JXDatePicker;
 
 import customUI.RoundedButton;
+import javax.swing.JSpinner;
 
 public class Test2 extends JFrame{
 	
@@ -121,6 +122,9 @@ public class Test2 extends JFrame{
 		lblNewLabel.setPreferredSize(new Dimension(dpNgaySinhKHnew.getPreferredSize().width, 30));
 
 		pnlTimKHContent.add(pnlTimKHLeft, BorderLayout.CENTER);
+		
+		JSpinner spinner = new JSpinner();
+		pnlTimKHLeft.add(spinner);
 
 		JPanel pnlActionTKH = new JPanel();
 		pnlActionTKH.setBorder(new EmptyBorder(10, 0, 15, 0));
