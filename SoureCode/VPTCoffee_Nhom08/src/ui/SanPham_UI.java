@@ -33,7 +33,7 @@ public class SanPham_UI extends JPanel implements ChangeListener{
 		tabbedPane.addTab(cusBanHang.getTextTab(), cusBanHang.getPathIcon(), cusBanHang.getComponent(),
 				cusBanHang.getTip());
 		pnlBanHang.setLayout(new BorderLayout());
-		pnlBanHang.add(new SanPham_BanHang_UI(), BorderLayout.CENTER);
+		pnlBanHang.add(new SanPham_QuanLy_UI(), BorderLayout.CENTER);
 
 		// tab quan ly san pham
 		JPanel pnlQuanLySanPham = new JPanel();

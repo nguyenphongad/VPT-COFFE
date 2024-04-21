@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import customUI.ImageScaler;
+import customUI.RoundedButton;
 
 import javax.swing.Box;
 import java.awt.Dimension;
@@ -24,6 +25,9 @@ import javax.swing.JButton;
 import java.awt.Component;
 import java.awt.CardLayout;
 import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class Test extends JFrame{
 	public Test() {
@@ -33,6 +37,7 @@ public class Test extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
+
 		JPanel pnlQtitle = new JPanel();
 		pnlQtitle.setBackground(new Color(255, 255, 255));
 		getContentPane().add(pnlQtitle, BorderLayout.NORTH);
@@ -43,7 +48,7 @@ public class Test extends JFrame{
 		
 		JPanel pnlQuet = new JPanel();
 		pnlQuet.setBackground(new Color(255, 255, 255));
-		pnlQuet.setBorder(new EmptyBorder(10, 10, 20, 50));
+		pnlQuet.setBorder(new EmptyBorder(10, 10, 20, 40));
 		getContentPane().add(pnlQuet, BorderLayout.CENTER);
 		pnlQuet.setLayout(new GridLayout(0, 2, 0, 0));
 		
@@ -67,7 +72,7 @@ public class Test extends JFrame{
 		pnlInQR.add(pnlImageQR, BorderLayout.NORTH);
 		
 		JLabel lblMaQR = new JLabel("");
-		lblMaQR.setIcon(new ImageScaler("/image/QR_thanhToan.jpg", 480, 430).getScaledImageIcon());
+		lblMaQR.setIcon(new ImageScaler("/image/QR_thanhToan.png", 430, 420).getScaledImageIcon());
 		pnlImageQR.add(lblMaQR);
 		
 		JPanel pnlLeftQR = new JPanel();
@@ -82,8 +87,84 @@ public class Test extends JFrame{
 		lblChiTiet.setBorder(new EmptyBorder(0, 0, 20, 0));
 		pnlLeftQR.add(lblChiTiet, BorderLayout.NORTH);
 		
+		
+		JPanel pnBodyCTHD = new JPanel();
+		pnlLeftQR.add(pnBodyCTHD, BorderLayout.CENTER);
+		pnBodyCTHD.setLayout(new BorderLayout(0, 0));
+		
+		JPanel pnlThongTinCTHD = new JPanel();
+		pnlThongTinCTHD.setBackground(new Color(255, 255, 255));
+		pnlThongTinCTHD.setBorder(new EmptyBorder(0, 0, 0, 0));
+		pnBodyCTHD.add(pnlThongTinCTHD, BorderLayout.NORTH);
+		pnlThongTinCTHD.setLayout(new BoxLayout(pnlThongTinCTHD, BoxLayout.Y_AXIS));
+		
+		JPanel pnlLine1CTHD = new JPanel();
+		pnlLine1CTHD.setBackground(new Color(255, 255, 255));
+		pnlThongTinCTHD.add(pnlLine1CTHD);
+		pnlLine1CTHD.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		JPanel pnlNL = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) pnlNL.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		pnlNL.setBackground(new Color(255, 255, 255));
+		pnlLine1CTHD.add(pnlNL);
+		
+		JLabel lblNgayLapHD = new JLabel("NGÀY LẬP : ");
+		lblNgayLapHD.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlNL.add(lblNgayLapHD);
+		
+		JLabel lblNgayLapHDOutput = new JLabel("dateHD");
+		pnlNL.add(lblNgayLapHDOutput);
+		
+		JPanel pnlNVLap = new JPanel();
+		pnlNVLap.setBorder(new EmptyBorder(0, 50, 0, 0));
+		FlowLayout flowLayout_2 = (FlowLayout) pnlNVLap.getLayout();
+		flowLayout_2.setAlignment(FlowLayout.LEFT);
+		pnlNVLap.setBackground(new Color(255, 255, 255));
+		pnlLine1CTHD.add(pnlNVLap);
+		
+		JLabel lblNhanVienLap = new JLabel("NHÂN VIÊN : ");
+		lblNhanVienLap.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlNVLap.add(lblNhanVienLap);
+		
+		JLabel lblNhanVienLapOutput = new JLabel("maNV");
+		pnlNVLap.add(lblNhanVienLapOutput);
+		
+		JPanel pnlLine2CTHD = new JPanel();
+		pnlLine2CTHD.setBackground(new Color(255, 255, 255));
+		pnlThongTinCTHD.add(pnlLine2CTHD);
+		pnlLine2CTHD.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		JPanel pnlKH = new JPanel();
+		FlowLayout flowLayout_3 = (FlowLayout) pnlKH.getLayout();
+		flowLayout_3.setAlignment(FlowLayout.LEFT);
+		pnlKH.setBackground(new Color(255, 255, 255));
+		pnlLine2CTHD.add(pnlKH);
+		
+		JLabel lblKHLap = new JLabel("KHÁCH HÀNG : ");
+		lblKHLap.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlKH.add(lblKHLap);
+		
+		JLabel lblKHLapOutPut = new JLabel("sdt - ten");
+		pnlKH.add(lblKHLapOutPut);
+		
+		JPanel pnlGChu = new JPanel();
+		pnlGChu.setBorder(new EmptyBorder(0, 50, 0, 0));
+		FlowLayout flowLayout_4 = (FlowLayout) pnlGChu.getLayout();
+		flowLayout_4.setAlignment(FlowLayout.LEFT);
+		pnlGChu.setBackground(new Color(255, 255, 255));
+		pnlLine2CTHD.add(pnlGChu);
+		
+		JLabel lblGChu = new JLabel("GHI CHÚ : ");
+		lblGChu.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
+		pnlGChu.add(lblGChu);
+		
+		JLabel lblGChuOutPut = new JLabel("ghichu");
+		pnlGChu.add(lblGChuOutPut);
+		
+		
 		JPanel pnlChiTiet = new JPanel();
-		pnlLeftQR.add(pnlChiTiet, BorderLayout.CENTER);
+		pnBodyCTHD.add(pnlChiTiet, BorderLayout.CENTER);
 		pnlChiTiet.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JPanel pnl_11 = new JPanel();
@@ -93,13 +174,11 @@ public class Test extends JFrame{
 		pnl_11.setLayout(new BoxLayout(pnl_11, BoxLayout.Y_AXIS));
 		
 		JLabel lblTenSP = new JLabel("TÊN SẢN PHẨM");
-		lblTenSP.setBorder(new EmptyBorder(5, 0, 5, 0));
+		lblTenSP.setBorder(new EmptyBorder(5, 0, 15, 0));
 		lblTenSP.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
 		lblTenSP.setPreferredSize(new Dimension(70, 40));
 		pnl_11.add(lblTenSP);
 		
-		JLabel lblNewLabel = new JLabel("Bạc sỉu");
-		pnl_11.add(lblNewLabel);
 		
 		JPanel pnl_22 = new JPanel();
 		pnl_22.setBackground(new Color(255, 255, 255));
@@ -107,60 +186,25 @@ public class Test extends JFrame{
 		pnlChiTiet.add(pnl_22);
 		pnl_22.setLayout(new BoxLayout(pnl_22, BoxLayout.Y_AXIS));
 		
-		JLabel lblSoLuong = new JLabel("SỐ LƯỢNG");
-		lblSoLuong.setBorder(new EmptyBorder(5, 0, 5, 0));
+		JLabel lblSoLuong = new JLabel("<html><div style='text-align: right'>" + "SỐ LƯỢNG"+ "</div></html>");
+		lblSoLuong.setToolTipText("á\r\nádá\r\nád");
+		lblSoLuong.setBorder(new EmptyBorder(5, 0, 15, 0));
+		lblSoLuong.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSoLuong.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
 		pnl_22.add(lblSoLuong);
 		
-		JLabel lblNewLabel_2 = new JLabel("x2");
-		pnl_22.add(lblNewLabel_2);
 		
 		JPanel pnl_33 = new JPanel();
 		pnl_33.setBackground(new Color(255, 255, 255));
 		pnlChiTiet.add(pnl_33);
 		pnl_33.setLayout(new BoxLayout(pnl_33, BoxLayout.Y_AXIS));
 		
-		JLabel lblThanhTien = new JLabel("THÀNH TIỀN");
-		lblThanhTien.setBorder(new EmptyBorder(5, 0, 5, 0));
-		lblThanhTien.setHorizontalAlignment(SwingConstants.RIGHT);
+		JLabel lblThanhTien = new JLabel("<html><div style='text-align: right'>" + "THÀNH TIỀN"+ "</div></html>");
+		lblThanhTien.setBorder(new EmptyBorder(5, 0, 15, 0));
+		lblThanhTien.setHorizontalAlignment(SwingConstants.CENTER);
 		lblThanhTien.setFont(new Font("Segoe UI Semibold", Font.BOLD, 18));
 		lblThanhTien.setPreferredSize(pnl_33.getPreferredSize());
 		pnl_33.add(lblThanhTien);
-		
-		JLabel lblNewLabel_3 = new JLabel("39,000");
-		pnl_33.add(lblNewLabel_3);
-		
-		JPanel pnlAction = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) pnlAction.getLayout();
-		flowLayout.setVgap(10);
-		flowLayout.setHgap(15);
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		getContentPane().add(pnlAction, BorderLayout.SOUTH);
-		
-		JButton btnNewButton = new JButton("New button");
-		pnlAction.add(btnNewButton);
-		
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		pnlAction.add(horizontalStrut);
-		
-		JButton btnNewButton_1 = new JButton("New button");
-		pnlAction.add(btnNewButton_1);
-		
-		List<JLabel> labels = new ArrayList<>();
-
-		int soLuongJLabel = 10; // Ví dụ
-
-		for (int i = 0; i < soLuongJLabel; i++) {
-		    JLabel label = new JLabel(String.valueOf(i));
-		    labels.add(label);
-		}
-
-		for (JLabel label : labels) {
-//			System.out.println(label);
-			pnl_11.add(label);
-		}
-
-		
 		
 		
 		setVisible(true);

@@ -3,13 +3,13 @@ package entity;
 import java.util.Date;
 
 public class KhachHang {
-	private int soDienThoai;
+	private String soDienThoai;
 	private String tenKH;
 	private Date ngaySinh;
 	private int tongDiemTichLuy;
 	
 	
-	public KhachHang(int soDienThoai, String tenKH, Date ngaySinh, int tongDiemTichLuy) {
+	public KhachHang(String soDienThoai, String tenKH, Date ngaySinh, int tongDiemTichLuy) {
 		super();
 		this.soDienThoai = soDienThoai;
 		this.tenKH = tenKH;
@@ -18,15 +18,23 @@ public class KhachHang {
 	}
 	
 	
+	
+	public KhachHang(String soDienThoai) {
+		super();
+		this.soDienThoai = soDienThoai;
+	}
+
+
+
 	public KhachHang() {
 		super();
 	}
 
 
-	public int getSoDienThoai() {
+	public String getSoDienThoai() {
 		return soDienThoai;
 	}
-	public void setSoDienThoai(int soDienThoai) {
+	public void setSoDienThoai(String soDienThoai) {
 		this.soDienThoai = soDienThoai;
 	}
 	public String getTenKH() {

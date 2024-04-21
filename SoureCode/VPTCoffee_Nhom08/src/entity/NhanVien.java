@@ -54,6 +54,15 @@ public class NhanVien {
 		this.trangThai = trangThai;
 		this.chucVu = chucVu;
 	}
+	
+	
+	
+	public NhanVien(String maNV) {
+	super();
+	this.maNV = maNV;
+}
+
+
 	public String getMaNV() {
 		return maNV;
 	}

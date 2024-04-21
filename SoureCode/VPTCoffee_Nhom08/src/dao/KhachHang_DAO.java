@@ -29,7 +29,7 @@ public class KhachHang_DAO {
 			rs = st.executeQuery();
 			while(rs.next()) {
 				KhachHang kh = new KhachHang(
-						rs.getInt("soDienThoai"),
+						rs.getString("soDienThoai"),
 						rs.getString("tenKH"),
 						rs.getDate("ngaySinh"),
 						rs.getInt("tongDiemTichLuy")
@@ -53,7 +53,7 @@ public class KhachHang_DAO {
 			st = conn.prepareStatement(query);
 			
 			
-			st.setInt(1, khnew.getSoDienThoai());
+			st.setString(1, khnew.getSoDienThoai());
 			st.setString(2, khnew.getTenKH());
 			st.setDate(3, new java.sql.Date (khnew.getNgaySinh().getTime()));
 			st.setInt(4, khnew.getTongDiemTichLuy());
