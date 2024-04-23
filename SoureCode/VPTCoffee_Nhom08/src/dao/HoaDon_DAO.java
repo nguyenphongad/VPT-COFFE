@@ -126,7 +126,6 @@ public class HoaDon_DAO {
 		
 		try {
 			connection = ConnectDB.getConnection();
-			System.out.println( month);
 			preparedStatement = connection.prepareStatement("Select sum(tongTien) as tongDoanhThu From HoaDon Where Month(ngayLap) = ? and Day(ngayLap) = ?");
 			preparedStatement.setInt(1, month);
 			preparedStatement.setInt(2, day);

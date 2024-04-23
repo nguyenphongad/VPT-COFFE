@@ -51,7 +51,7 @@ public class Main_UI extends JFrame {
 		
 		add(pnlContent, BorderLayout.CENTER);
 
-		pnlContent.add(new SanPham_UI(), BorderLayout.CENTER);
+		pnlContent.add(new SanPham_UI(this), BorderLayout.CENTER);
 	}
 	
 

@@ -13,8 +13,9 @@ import javax.swing.event.ChangeListener;
 import customUI.CustomTabbed;
 
 public class SanPham_UI extends JPanel implements ChangeListener{
-	public SanPham_UI() {
-
+	private Main_UI main;
+	public SanPham_UI(Main_UI main) {
+		this.main = main;
 		setBackground(Color.decode("#D2BAA6"));
 		setLayout(new BorderLayout(0, 0));
 		setBorder(new EmptyBorder(3, 3, 3, 3));
@@ -33,7 +34,7 @@ public class SanPham_UI extends JPanel implements ChangeListener{
 		tabbedPane.addTab(cusBanHang.getTextTab(), cusBanHang.getPathIcon(), cusBanHang.getComponent(),
 				cusBanHang.getTip());
 		pnlBanHang.setLayout(new BorderLayout());
-		pnlBanHang.add(new SanPham_BanHang_UI(), BorderLayout.CENTER);
+		pnlBanHang.add(new SanPham_BanHang_UI(main), BorderLayout.CENTER);
 
 		// tab quan ly san pham
 		JPanel pnlQuanLySanPham = new JPanel();
@@ -55,7 +56,7 @@ public class SanPham_UI extends JPanel implements ChangeListener{
 		    public void stateChanged(ChangeEvent e) {
 		        if (tabbedPane.getSelectedComponent() == pnlBanHang) {
 		        	pnlBanHang.removeAll();
-		    		pnlBanHang.add(new SanPham_BanHang_UI(), BorderLayout.CENTER);
+		    		pnlBanHang.add(new SanPham_BanHang_UI(main), BorderLayout.CENTER);
 		    		pnlBanHang.revalidate();
 		    		pnlBanHang.repaint();
 		        }

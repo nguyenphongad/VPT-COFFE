@@ -108,10 +108,12 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private JPanel pnlRenderSP;
 
 	DecimalFormat decimalFormat = new DecimalFormat("#,##0");
-
+	private Main_UI main;
+	
 //	---------------------------------------------------------------------
 
-	public SanPham_BanHang_UI() {
+	public SanPham_BanHang_UI(Main_UI main) {
+		this.main = main;
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel pnlContainer = new JPanel();
@@ -1456,7 +1458,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		lblNgayLapHDOutput.setText(formattedDateTime);
 
 		// luu thong tin nhan vien dang nhap
-		lblNhanVienLapOutput.setText("NV0001");
+		lblNhanVienLapOutput.setText(main.taiKhoan.getNV().getMaNV());
 
 		// lay thong tin khach hang
 		lblKHLapOutPut.setText(txtSdtKH.getText() + " - " + txtTenKH.getText());

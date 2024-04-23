@@ -222,7 +222,7 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		}
 		// click hien giao dien san pham
 		if (o == mnSanPham) {
-			resetPage(new SanPham_UI());
+			resetPage(new SanPham_UI(main));
 			
 			mnTrangChu.setBackground(Color.decode("#B16E5C"));
 //			mnBanHang.setBackground(Color.decode("#B16E5C"));
