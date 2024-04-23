@@ -5,6 +5,11 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -14,24 +19,32 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
 
 public class HoaDon_QuanLy_UI extends JPanel{
 	private JTable tableHoaDon;
 	private DefaultTableModel modelHoaDon;
 	private JTable tableCTHoaDon;
 	private DefaultTableModel modelCTHoaDon;
-	private JScrollPane tableScroll;
+	private JScrollPane tableScroll_1;
+	private JScrollPane tableScroll_2;
 	private JLabel maHDValue;
 	private JLabel tenKHValue;
 	private JLabel sdtValue;
 	private JLabel ngayLapHDValue;
-	private JLabel loaiThanhToanValue;
 	private JTextArea ghiChuArea;
-	private JTextArea diaChiArea;
 	private JLabel tongTienSanPhamValue;
-	private JLabel tongTienHoaDonValue;
-	private JLabel chiPhiKhacValue;
+	private HoaDon_DAO hoaDon_DAO;
+	private List<HoaDon> dsHoaDon;
+	private ChiTietHoaDon_DAO chiTietHoaDon_Dao;
+	private List<ChiTietHoaDon> dsChiTietHoaDon;
 	
 	public HoaDon_QuanLy_UI() {
 		GridLayout gridLayout_1 = new GridLayout(1, 2);
@@ -46,15 +59,50 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		danhSachHoaDonPnl.setLayout(borderLayout_1);
 		
 		JLabel danhSachHoaDonLabel = new JLabel("Danh Sách Hóa Đơn", SwingConstants.CENTER);
-		danhSachHoaDonLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+		danhSachHoaDonLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
 		danhSachHoaDonPnl.add(borderLayout_1.NORTH, danhSachHoaDonLabel);
 		
 		String[] danhSachHoaDonColHeader = { "Mã HĐ", "Tên Khách Hàng", "Tên Nhân Viên", "Ngày Lập HĐ", "Tổng tiền"};
 		modelHoaDon = new DefaultTableModel(danhSachHoaDonColHeader, 0);
 		tableHoaDon = new JTable(modelHoaDon);
-		tableScroll = new JScrollPane(tableHoaDon);
-		tableScroll.getViewport().setBackground(Color.white);
-		danhSachHoaDonPnl.add(tableScroll, BorderLayout.CENTER);
+		
+		JTableHeader Theader = tableHoaDon.getTableHeader();
+        Theader.setForeground(Color.BLACK); 
+        Theader.setFont(new Font(Font.SERIF, Font.BOLD, 13)); 
+        ((DefaultTableCellRenderer)Theader.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER); 
+        
+		tableScroll_1 = new JScrollPane(tableHoaDon);
+		tableScroll_1.getViewport().setBackground(Color.white);
+		loadDSHoaDon();
+		danhSachHoaDonPnl.add(tableScroll_1, BorderLayout.CENTER);
+		
+		tableHoaDon.addMouseListener(new java.awt.event.MouseAdapter() {
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		    	int row = tableHoaDon.getSelectedRow();
+			       if(row != -1 && row < tableHoaDon.getRowCount()) {
+			    	   dsChiTietHoaDon = new ArrayList<ChiTietHoaDon>();
+			    	   chiTietHoaDon_Dao = new ChiTietHoaDon_DAO();
+			    	   dsChiTietHoaDon = chiTietHoaDon_Dao.getChiTietHoaDonTheoMaHoaDon(tableHoaDon.getValueAt(row, 0).toString());
+			    	   loadDSCTHoaDon();
+			    	   
+			    	   hoaDon_DAO = new HoaDon_DAO();
+			    	   HoaDon hoaDon =  hoaDon_DAO.getHoaDontheoMa(tableHoaDon.getValueAt(row, 0).toString());
+			    	  
+			    	   String formated_NgayLap = hoaDon.getNgayLap().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+			    	   DecimalFormat decimalFormat = new DecimalFormat("#,###.#VND");
+			    	   
+			    	   maHDValue.setText(hoaDon.getMaHD());
+			    	   tenKHValue.setText(hoaDon.getKhachHang().getTenKH());
+			    	   sdtValue.setText(hoaDon.getKhachHang().getSoDienThoai());
+			    	   ngayLapHDValue.setText(formated_NgayLap);
+			    	   tongTienSanPhamValue.setText(decimalFormat.format(hoaDon.getTongTien()));
+			    	   
+			    	   ghiChuArea.setText(dsChiTietHoaDon.get(0).getGhiChu());
+			       }
+		    }
+		});
+		
 		
 		BorderLayout borderLayout_2 = new BorderLayout(5, 5);
 		chiTietHoaDonPnl.setLayout(borderLayout_2);
@@ -63,13 +111,19 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		chiTietHoaDonLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
 		chiTietHoaDonPnl.add(borderLayout_2.NORTH, chiTietHoaDonLabel);
 		
-		String[] chiTietHoaDonColHeader = { "Tên SP", "Đơn Giá", "Thành Tiền", "Ghi Chú"};
+		String[] chiTietHoaDonColHeader = { "Tên SP", "Đơn Giá", "Số lượng", "Thành Tiền"};
 		modelCTHoaDon = new DefaultTableModel(chiTietHoaDonColHeader, 0);
 		tableCTHoaDon = new JTable(modelCTHoaDon);
-		tableScroll = new JScrollPane(tableCTHoaDon);
-		tableScroll.getViewport().setBackground(Color.white);
-		chiTietHoaDonPnl.add(tableScroll, BorderLayout.CENTER);
 		
+		JTableHeader Theader_1 = tableCTHoaDon.getTableHeader();
+		Theader_1.setForeground(Color.BLACK); 
+		Theader_1.setFont(new Font(Font.SERIF, Font.BOLD, 13)); 
+        ((DefaultTableCellRenderer)Theader_1.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER); 
+        
+		tableScroll_2 = new JScrollPane(tableCTHoaDon);
+		tableScroll_2.getViewport().setBackground(Color.white);
+		chiTietHoaDonPnl.add(tableScroll_2, BorderLayout.CENTER);
+
 		JPanel noiDungChiTietHoaDonPnl = new JPanel();
 		
 		GridLayout gridLayout_2 = new GridLayout(1, 2);
@@ -86,7 +140,7 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		JPanel maHDPanel = new JPanel();
 		maHDPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel maHDLabel = new JLabel("Mã Hóa Đơn:");
-		maHDValue = new JLabel("HD0003");
+		maHDValue = new JLabel("");
 		maHDValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 		maHDPanel.add(maHDLabel);
 		maHDPanel.add(maHDValue);
@@ -94,7 +148,7 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		JPanel tenKHPanel = new JPanel();
 		tenKHPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel tenKHLabel = new JLabel("Tên Khách Hàng:");
-		tenKHValue = new JLabel("Trần Đức Vũ");
+		tenKHValue = new JLabel("");
 		tenKHValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 		tenKHPanel.add(tenKHLabel);
 		tenKHPanel.add(tenKHValue);
@@ -102,7 +156,7 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		JPanel sdtPanel = new JPanel();
 		sdtPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel sdtLabel = new JLabel("Số Điện Thoại:");
-		sdtValue = new JLabel("0946890234");
+		sdtValue = new JLabel("");
 		sdtValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 		sdtPanel.add(sdtLabel);
 		sdtPanel.add(sdtValue);
@@ -110,68 +164,33 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		JPanel ngayLapHDPanel = new JPanel();
 		ngayLapHDPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel ngayLapHDLabel = new JLabel("Ngày Lập HĐ:");
-		ngayLapHDValue = new JLabel("15:29 20-04-2033");
+		ngayLapHDValue = new JLabel("");
 		ngayLapHDValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 		ngayLapHDPanel.add(ngayLapHDLabel);
 		ngayLapHDPanel.add(ngayLapHDValue);
 		
-		JPanel ghiChuPanel = new JPanel();
-		ghiChuPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel ghiChuLabel = new JLabel("Ghi Chú:");
-		ghiChuArea = new JTextArea(5, 30);
-		ghiChuPanel.add(ghiChuLabel);
-		ghiChuPanel.add(ghiChuArea);
-		
-		leftColPanel.add(maHDPanel);
-		leftColPanel.add(tenKHPanel);
-		leftColPanel.add(sdtPanel);
-		leftColPanel.add(ngayLapHDPanel);
-		leftColPanel.add(ghiChuPanel);
-		
 		JPanel tongTienSanPhamPanel = new JPanel();
 		tongTienSanPhamPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel tongTienSanPhamLabel = new JLabel("Tổng tiền HĐ:");
-		tongTienSanPhamValue = new JLabel("20.300 đ");
+		JLabel tongTienSanPhamLabel = new JLabel("Tổng tiền:");
+		tongTienSanPhamValue = new JLabel("");
 		tongTienSanPhamValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 		tongTienSanPhamPanel.add(tongTienSanPhamLabel);
 		tongTienSanPhamPanel.add(tongTienSanPhamValue);
 
-		JPanel tongTienHoaDonPanel = new JPanel();
-		tongTienHoaDonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel tongTienHoaDonLabel = new JLabel("Tổng tiền SP:");
-		tongTienHoaDonValue = new JLabel("20.300đ");
-		tongTienHoaDonValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-		tongTienHoaDonPanel.add(tongTienHoaDonLabel);
-		tongTienHoaDonPanel.add(tongTienHoaDonValue);
+		leftColPanel.add(maHDPanel);
+		leftColPanel.add(tenKHPanel);
+		leftColPanel.add(sdtPanel);
+		leftColPanel.add(ngayLapHDPanel);
+		leftColPanel.add(tongTienSanPhamPanel);
 		
-		JPanel chiPhiKhacPanel = new JPanel();
-		chiPhiKhacPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel chiPhiKhacLabel = new JLabel("Chi phí khác:");
-		chiPhiKhacValue = new JLabel("0đ");
-		chiPhiKhacValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-		chiPhiKhacPanel.add(chiPhiKhacLabel);
-		chiPhiKhacPanel.add(chiPhiKhacValue);
-
-		JPanel loaiThanhToanPanel = new JPanel();
-		loaiThanhToanPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel loaiThanhToanLabel = new JLabel("Loại Thanh Toán:");
-		loaiThanhToanValue = new JLabel("Chuyển khoản");
-		loaiThanhToanValue.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-		loaiThanhToanPanel.add(loaiThanhToanLabel);
-		loaiThanhToanPanel.add(loaiThanhToanValue);
+		JPanel ghiChuPanel = new JPanel();
+		ghiChuPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JLabel ghiChuLabel = new JLabel("Ghi Chú Hóa Đơn:");
+		ghiChuArea = new JTextArea(10, 30);
+		ghiChuPanel.add(ghiChuLabel);
+		ghiChuPanel.add(ghiChuArea);
 		
-		JPanel diaChiPanel = new JPanel();
-		diaChiPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		JLabel diaChiLabel = new JLabel("Địa chỉ:");
-		diaChiArea = new JTextArea(5, 30);
-		diaChiPanel.add(diaChiLabel);
-		diaChiPanel.add(diaChiArea);
-		
-		rightColPanel.add(tongTienSanPhamPanel);
-		rightColPanel.add(chiPhiKhacPanel);
-		rightColPanel.add(tongTienHoaDonPanel);
-		rightColPanel.add(loaiThanhToanPanel);
-		rightColPanel.add(diaChiPanel);
+		rightColPanel.add(ghiChuPanel);
 		
 		noiDungChiTietHoaDonPnl.add(leftColPanel);
 		noiDungChiTietHoaDonPnl.add(rightColPanel);
@@ -179,8 +198,32 @@ public class HoaDon_QuanLy_UI extends JPanel{
 		chiTietHoaDonPnl.add(BorderLayout.SOUTH, noiDungChiTietHoaDonPnl);
 		
 		add(danhSachHoaDonPnl);
-		add(chiTietHoaDonPnl);
-		
-		
+		add(chiTietHoaDonPnl);		
+	}
+	
+	public void loadDSHoaDon() {
+		hoaDon_DAO = new HoaDon_DAO();
+		dsHoaDon = hoaDon_DAO.getAllHoaDon();
+		DecimalFormat decimalFormat = new DecimalFormat("#,###.#VND");
+		modelHoaDon.setRowCount(0);
+		for(HoaDon hoaDon : dsHoaDon) {
+			
+			String formated_NgayLap = hoaDon.getNgayLap().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+			String rows[] = {hoaDon.getMaHD(), hoaDon.getKhachHang().getTenKH(), hoaDon.getNhanVien().getTenNV(), formated_NgayLap, decimalFormat.format(hoaDon.getTongTien())};
+			modelHoaDon.addRow(rows);
+		}
+		repaint();
+	}
+	
+	public void loadDSCTHoaDon() {
+		DecimalFormat decimalFormat = new DecimalFormat("#,###.#VND");
+		modelCTHoaDon.setRowCount(0);
+		for(ChiTietHoaDon chiTietHoaDon : dsChiTietHoaDon) {
+			String formated_donGia = decimalFormat.format(chiTietHoaDon.getSanPham().getDonGia());
+			String formated_thanhTien = decimalFormat.format(chiTietHoaDon.getSanPham().getDonGia() * chiTietHoaDon.getSoLuong());
+			String rows[] = {chiTietHoaDon.getSanPham().getTenSP(), formated_donGia, Integer.toString(chiTietHoaDon.getSoLuong()), formated_thanhTien};
+			modelCTHoaDon.addRow(rows);
+		}
+		repaint();
 	}
 }

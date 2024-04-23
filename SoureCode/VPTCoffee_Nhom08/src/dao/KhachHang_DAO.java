@@ -12,6 +12,40 @@ import entity.KhachHang;
 
 public class KhachHang_DAO {
 	
+	
+	public KhachHang getKhachHangTheoSDT(String sdt) {
+		KhachHang khachHang = new KhachHang();
+		Connection connection = null;
+		PreparedStatement preparedStatement =null;
+		try {
+			connection  = ConnectDB.getConnection();
+			preparedStatement = connection.prepareStatement("select * from [dbo].[KhachHang] where [soDienThoai] = ?");
+			preparedStatement.setString(1, sdt);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				khachHang.setTenKH(resultSet.getString("tenKH"));
+				khachHang.setSoDienThoai(resultSet.getString("soDienThoai"));
+				khachHang.setNgaySinh(resultSet.getDate("ngaySinh"));
+				khachHang.setTongDiemTichLuy(resultSet.getInt("tongDiemTichLuy"));		
+			}
+			
+			preparedStatement.close();
+			resultSet.close();
+			
+			return khachHang;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
 	// tìm sdt tích điểm
 	public ArrayList<KhachHang> timSoDienThoaiKhachHang(int sdt ){
 		ArrayList<KhachHang> listKH = new ArrayList<KhachHang>();

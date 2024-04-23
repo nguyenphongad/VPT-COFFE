@@ -1538,11 +1538,11 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 							dlQR.dispose();
 
-							try {
-								new XuatPDF_UTIL().xuatHoaDon(chiTietHoaDon, sanPhamDS);
-							} catch (Exception e2) {
-								e2.printStackTrace();
-							}
+//							try {
+//								new XuatPDF_UTIL().xuatHoaDon(chiTietHoaDon, sanPhamDS);
+//							} catch (Exception e2) {
+//								e2.printStackTrace();
+//							}
 
 						} else {
 							alertNotification("TẠO HOÁ ĐƠN KHÔNG THÀNH CÔNG!!!");

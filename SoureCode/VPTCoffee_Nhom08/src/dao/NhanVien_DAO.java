@@ -743,7 +743,46 @@ public class NhanVien_DAO {
 		}
 		return soLuong;
 	}
+	private NhanVien getNhanVien(ResultSet resultSet) throws SQLException {
+		String maNV = resultSet.getString("maNV");
+		String tenNV = resultSet.getString("tenNV");
+//		String matKhau = resultSet.getString("matKhau");
+		boolean gioiTinh = resultSet.getBoolean("gioiTinh");
+        Date ngaySinh = resultSet.getDate("ngaySinh");
+		String sDT = resultSet.getString("sDT");
+		String email = resultSet.getString("email");
+		String maCCCD = resultSet.getString("maCCCD");
+		String diaChi = resultSet.getString("diaChi");
+		Date ngayVaoLam = resultSet.getDate("ngayVaoLam");
+		String ghiChu = resultSet.getString("ghiChu");
+		boolean trangThai = resultSet.getBoolean("trangThai");
+		int chucVu = resultSet.getInt("chucVu");
+		
+		return new NhanVien(maNV, tenNV, gioiTinh, ngaySinh, sDT, email, maCCCD, diaChi, ngayVaoLam, ghiChu, trangThai, chucVu, "");
+	}
+	
+	public NhanVien getNhanVienTheoMa(String maNhanVien) {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		NhanVien nhanVien = null;
+		try {
+			preparedStatement = ConnectDB.getConnection()
+					.prepareStatement("SELECT * FROM NhanVien WHERE maNV = ?");
+			preparedStatement.setString(1, maNhanVien);
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next()) nhanVien = getNhanVien(resultSet);
 
+			preparedStatement.close();
+			resultSet.close();
+			
+			return nhanVien;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return null;
+	}
 
 
 }

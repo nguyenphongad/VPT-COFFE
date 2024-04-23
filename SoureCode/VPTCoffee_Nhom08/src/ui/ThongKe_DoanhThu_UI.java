@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 
 import javax.swing.BoxLayout;
@@ -23,11 +25,14 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import dao.HoaDon_DAO;
+
 public class ThongKe_DoanhThu_UI extends JPanel {
 	private JPanel panelTKThang;
 	private JTextField tongDoanhThuTxt;
 	private JComboBox<Integer> thangComboBox;
-	private Double tongDoanhThuThang;
+	private double tongDoanhThuThang;
+	private HoaDon_DAO hoaDon_DAO;
 	
 	public ThongKe_DoanhThu_UI() {
 		BorderLayout borderLayout = new BorderLayout();
@@ -51,6 +56,15 @@ public class ThongKe_DoanhThu_UI extends JPanel {
         Integer thang[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         thangComboBox = new JComboBox<Integer>(thang);
         thangComboBox.setPreferredSize(new Dimension(50, 20));
+        thangComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				thongKeThang();
+			}
+		});
+        
+       
 		thangPanel.add(thangLabel);
 		thangPanel.add(thangComboBox);
 		
@@ -58,6 +72,7 @@ public class ThongKe_DoanhThu_UI extends JPanel {
 		tongDoanhThuPanel.setBackground(Color.white);
 		JLabel tongDoanhThuLabel = new JLabel("Tổng Doanh Thu:");
 		tongDoanhThuTxt = new JTextField(10);
+		tongDoanhThuTxt.setEditable(false);
 		tongDoanhThuPanel.add(tongDoanhThuLabel);
 		tongDoanhThuPanel.add(tongDoanhThuTxt);
 		
@@ -70,7 +85,6 @@ public class ThongKe_DoanhThu_UI extends JPanel {
 		northPanel.add(thongKeDoanhThuLabel);
 		northPanel.add(controlPanel);
 		
-		// Create chart
 		thongKeThang();
 		
 		add(BorderLayout.NORTH, northPanel);
@@ -100,15 +114,17 @@ public class ThongKe_DoanhThu_UI extends JPanel {
 	        panelTKThang.repaint();
 	        panelTKThang.removeAll();
 	        
-//	        int soHoaDon = daoHoaDon.tongSoHoaDonTheoThang(Integer.parseInt(thangComboBox.getSelectedItem().toString()));
-	        int soHoaDon = 0; // Remove current row code after daoHoaDon class was created
+	        hoaDon_DAO = new HoaDon_DAO();
+	      
+	        int soHoaDon = hoaDon_DAO.tongSoHoaDonTheoThang(Integer.parseInt(thangComboBox.getSelectedItem().toString()));
 	        
 	        if (soHoaDon == 0) {
 	            ChartPanel chartPanelNull = new ChartPanel(showChartNull());
-	            chartPanelNull.setPreferredSize(new Dimension(1100, 480));
+	            chartPanelNull.setPreferredSize(new Dimension(1150, 450));
 	            panelTKThang.add(chartPanelNull);
 	        } else {
 		        ChartPanel chartPanel = new ChartPanel(createChartThang());
+		        chartPanel.setPreferredSize(new Dimension(1150, 450));
 		        tongDoanhThuTxt.setText(String.format("%,.0f" + " VNĐ", tongDoanhThuThang));
 		        panelTKThang.add(chartPanel);
 	        }   
@@ -116,10 +132,11 @@ public class ThongKe_DoanhThu_UI extends JPanel {
 	  
 	  private JFreeChart createChartThang() {
 	        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-	        int month = thangComboBox.getSelectedIndex();
+	        int month = thangComboBox.getSelectedIndex() + 1;
 	        int n = 32;
 	        Calendar c = Calendar.getInstance();
 	        int currentYear = c.get(Calendar.YEAR);
+	        
 	        n = switch (month) {
 	            case 1 -> 32;
 	            case 2 -> ((currentYear % 4 == 0 || (currentYear % 100 != 0 && currentYear % 400 == 0)) && month == 2) ? 30 : 29;
@@ -132,14 +149,20 @@ public class ThongKe_DoanhThu_UI extends JPanel {
 	            default -> 31;
 	        };
 	        double tt = 0;
-
+	        
+	        hoaDon_DAO = new HoaDon_DAO();
 	        for (int i = 1; i < n; i++) {
 	            String ngay = String.valueOf(i);
-//	            tt = daoHoaDon.tongDoanhThuTheoTungNgayTrongThang(i, month);
+	            tt = hoaDon_DAO.tongDoanhThuTheoTungNgayTrongThang(i, month);
 	            tongDoanhThuThang += tt;
 	            dataset.addValue(tt, "Tổng tiền", ngay);
 	        }
-	        JFreeChart barChart = ChartFactory.createBarChart("", "Ngày", "Tổng tiền (VND)", dataset, PlotOrientation.VERTICAL, false, false, false);
+	        JFreeChart barChart = ChartFactory.createBarChart("", "Ngày", "Tổng tiền (VND)", dataset, PlotOrientation.VERTICAL, true, true, false);
+	        
+	        CategoryPlot plot = (CategoryPlot) barChart.getPlot();
+	        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+	        rangeAxis.setRange(0, 5000000);
+	        
 	        return barChart;
 	    }
 }

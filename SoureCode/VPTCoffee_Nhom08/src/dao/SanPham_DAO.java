@@ -10,6 +10,63 @@ import connectDB.ConnectDB;
 import entity.SanPham;
 
 public class SanPham_DAO {
+	
+	public SanPham getSanPham(ResultSet resultSet) {
+		try {
+			String maSP = resultSet.getString("maSP");
+			String tenSP = resultSet.getString("tenSP");
+			String loaiSP = resultSet.getString("loaiSP");
+			Double donGia = resultSet.getDouble("donGia");
+			boolean trangThai = resultSet.getBoolean("trangThai");
+			
+			return new SanPham(maSP, tenSP, loaiSP, null,  donGia, trangThai);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} 
+		return null;
+	}
+	
+	public SanPham getSanPhamtheoMa(String maSP) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		SanPham sanPham = null;
+		
+		try {
+			connection = ConnectDB.getConnection();
+			preparedStatement = connection.prepareStatement("Select * From SanPham Where maSP=?");
+			preparedStatement.setString(1, maSP);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) sanPham = getSanPham(resultSet);
+			
+			preparedStatement.close();
+			resultSet.close();
+			
+			return sanPham;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// lay ma SP tụ dong
 	public String getMaSPTuDong() {
 		ConnectDB.getInstance();
