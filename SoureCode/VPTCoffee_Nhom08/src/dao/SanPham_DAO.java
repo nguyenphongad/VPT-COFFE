@@ -73,10 +73,70 @@ public class SanPham_DAO {
 
 		return n > 0;
 	}
-	
+
 	// sua san pham
-	
-	
+	public boolean suaSP(SanPham sp) {
+		ConnectDB.getInstance();
+		PreparedStatement st = null;
+		int n = 0;
+		try {
+			Connection conn = ConnectDB.getConnection();
+			String querry = "update [dbo].[SanPham] set [tenSP]= ?,[loaiSP] = ?, [anhSP] = ?,\r\n"
+					+ "[donGia] = ?, [trangThai] = ? where [maSP] = ?";
+
+			st = conn.prepareStatement(querry);
+			st.setString(1, sp.getTenSP());
+			st.setString(2, sp.getLoaiSP());
+			st.setString(3, sp.getAnhSP());
+			st.setDouble(4, sp.getDonGia());
+			st.setBoolean(5, sp.isTrangThai());
+			st.setString(6, sp.getMaSP());
+
+			n = st.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				st.close();
+			} catch (SQLException e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+
+		return n > 0;
+	}
+
+	// xoa san pham
+	public boolean xoaSP(String maSP) {
+		ConnectDB.getInstance();
+		PreparedStatement st = null;
+		int n = 0;
+		try {
+			Connection conn = ConnectDB.getConnection();
+			String querry = "delete from SanPham where [maSP] = ?";
+
+			st = conn.prepareStatement(querry);
+			st.setString(1, maSP);
+
+			n = st.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				st.close();
+			} catch (SQLException e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+
+		return n > 0;
+	}
 
 	// kiem tra ton tai ma SP
 	public boolean kiemTraMaSP(String maSP) {
@@ -145,5 +205,104 @@ public class SanPham_DAO {
 
 		return spds;
 	}
+
+	// tim kiem theo ma
+	public ArrayList<SanPham> timKiemSPTheoMavaTen(String value) {
+		ArrayList<SanPham> listSP = new ArrayList<SanPham>();
+		ConnectDB.getInstance();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			Connection conn = ConnectDB.getConnection();
+			String query = "select * from SanPham where maSP like ? or tenSP like ?";
+
+			st = conn.prepareStatement(query);
+
+			st.setString(1, '%' + value + '%');
+			st.setString(2, '%' + value + '%');
+
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				SanPham sanPham = new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getDouble(5), rs.getBoolean(6));
+				listSP.add(sanPham);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return listSP;
+
+	}
+
+	// tim kiem theo loai
+	public ArrayList<SanPham> timKiemSPTheoLoai(String loai) {
+		ArrayList<SanPham> listSP = new ArrayList<SanPham>();
+		ConnectDB.getInstance();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			Connection conn = ConnectDB.getConnection();
+			String query = null;
+			if (loai.equals("")) {
+				query = "select * from SanPham";
+				st = conn.prepareStatement(query);
+			} else {
+				query = "select * from SanPham where [loaiSP] LIKE ?";
+				st = conn.prepareStatement(query);
+				st.setString(1, loai);
+
+			}
+
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				SanPham sanPham = new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getDouble(5), rs.getBoolean(6));
+				listSP.add(sanPham);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return listSP;
+
+	}
+	
+	
+	// tim kiem theo trang thai
+		public ArrayList<SanPham> timKiemSPTheoTrangThai(int tt) {
+			ArrayList<SanPham> listSP = new ArrayList<SanPham>();
+			ConnectDB.getInstance();
+			PreparedStatement st = null;
+			ResultSet rs = null;
+			try {
+				Connection conn = ConnectDB.getConnection();
+				String query = null;
+				if (tt==2) {
+					query = "select * from SanPham";
+					st = conn.prepareStatement(query);
+				} else {
+					query = "select * from SanPham where [trangThai] LIKE ?";
+					st = conn.prepareStatement(query);
+					st.setInt(1, tt);
+
+				}
+
+				rs = st.executeQuery();
+
+				while (rs.next()) {
+					SanPham sanPham = new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
+							rs.getDouble(5), rs.getBoolean(6));
+					listSP.add(sanPham);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return listSP;
+
+		}
 
 }

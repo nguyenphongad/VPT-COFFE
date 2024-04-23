@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
@@ -28,6 +29,8 @@ public class Header_UI extends JPanel implements ActionListener{
 	private RoundedButton btnLogout;
 	private Thread clock;
 	private JLabel lblTime, lblDate;
+	private JLabel lblName;
+	private JLabel lblChucVu;
 	
 	public Header_UI(Main_UI main) {
 		this.main = main;
@@ -58,12 +61,12 @@ public class Header_UI extends JPanel implements ActionListener{
 		pnlControl.setBackground(Color.decode("#B16E5C"));
 		pnlHeader.add(pnlControl, BorderLayout.EAST);
 		
-		JLabel lblName = new JLabel("NGUYỄN VĂN PHONG");
+		lblName = new JLabel("NGUYỄN VĂN PHONG");
 		lblName.setForeground(Color.decode("#ffffff"));
 		lblName.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
 		pnlControl.add(lblName);
 		
-		JLabel lblChucVu = new JLabel("- QUẢN LÝ (v1.81)");
+		lblChucVu = new JLabel("- QUẢN LÝ");
 		lblChucVu.setForeground(Color.decode("#ffffff"));
 		lblChucVu.setFont(new Font("Segoe UI Semibold", Font.BOLD, 20));
 		pnlControl.add(lblChucVu);
@@ -79,6 +82,20 @@ public class Header_UI extends JPanel implements ActionListener{
 		btnLogout.setBorder(null);
 		
 		btnLogout.addActionListener(this);
+		
+		
+		lblName.setText(main.taiKhoan.getNV().getTenNV().toUpperCase());
+		
+		if(main.taiKhoan.getNV().getChucVu()==1) {
+			lblChucVu.setText("- QUẢN LÝ");
+		}else if(main.taiKhoan.getNV().getChucVu()==0){
+			lblChucVu.setText("- NHÂN VIÊN");
+		}
+		
+		
+		
+		
+		
 		
 		pnlControl.add(btnLogout);
 		

@@ -8,16 +8,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import connectDB.ConnectDB;
+import entity.TaiKhoan;
 import util.ImportFont;
 
 public class Main_UI extends JFrame {
 	public ImportFont impFont;
 	
 	public JPanel pnlContainer, pnlContent;
+	public TaiKhoan taiKhoan;
 
-	public Main_UI() {
+	public Main_UI(TaiKhoan taiKhoan) {
 		ImageIcon appIcon = new ImageIcon("res/image/icon_logo.PNG");
 		setIconImage(appIcon.getImage());
+		this.taiKhoan = taiKhoan;
 		
 		setTitle("VPTCoffee | HỆ THỐNG CỬA HÀNG BÁN CÀ PHÊ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

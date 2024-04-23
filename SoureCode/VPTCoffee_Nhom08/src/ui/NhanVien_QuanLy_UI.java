@@ -12,16 +12,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.ExceptionListener;
+import java.lang.reflect.Array;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,18 +37,24 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import org.jdesktop.swingx.JXDatePicker;
 
 import customUI.ImageScaler;
 import customUI.RoundedButton;
 import dao.NhanVien_DAO;
+import dao.TaiKhoan_DAO;
 import entity.NhanVien;
+import entity.TaiKhoan;
 
 public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  MouseListener{
 	
-	private NhanVien_DAO listNhanVien;
+	private NhanVien_DAO nv_dao;
+	private ArrayList<NhanVien> listNV;
+	private ArrayList<TaiKhoan> listTK;
 	private JTextField txtMaNV;
 	private JTextField txtEmail;
 	private JTextField txtCCCD;
@@ -67,10 +78,15 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 	private JComboBox<String> comboBoxTrangThai;
 	private JLabel lblAvt;
 	private JButton btnSetAvt;
+	private boolean isThem = false;
+	private int editSelected = 0;
+	private String pathNameAvatar = "defaultavt.jpg";
+	private TaiKhoan_DAO tk_dao;
 	
 	
 	public NhanVien_QuanLy_UI() {
-		listNhanVien = new NhanVien_DAO();
+		nv_dao = new NhanVien_DAO();
+		tk_dao = new TaiKhoan_DAO();
 		
 		setLayout(new BorderLayout(0, 0));
 		
@@ -85,7 +101,7 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		panelTitle.add(lblTitle);
 		
 		JPanel panelDetail = new JPanel();
-		panelDetail.setBorder(new TitledBorder(null, "Th\u00F4ng tin chi ti\u1EBFt nh\u00E2n vi\u00EAn", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelDetail.setBorder(new TitledBorder(null, "Thông tin nhân viên", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelQuanLy.add(panelDetail, BorderLayout.CENTER);
 		panelDetail.setLayout(new BorderLayout(0, 0));
 		
@@ -96,10 +112,10 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		
 		lblAvt = new JLabel("");
 		panelAvt.add(lblAvt, BorderLayout.CENTER);
-		lblAvt.setIcon(new ImageScaler("/image_NhanVien/nhanVien.png" , 150, 150).getScaledImageIcon());
+		lblAvt.setIcon(new ImageScaler( "/image_NhanVien/" +  pathNameAvatar  , 150, 150).getScaledImageIcon());
 		lblAvt.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		btnSetAvt = new JButton("Chọn ảnh đại diện");
+		btnSetAvt = new JButton("Ảnh đại diện");
 		panelAvt.add(btnSetAvt, BorderLayout.SOUTH);
 		
 		JPanel panelInfo = new JPanel();
@@ -320,11 +336,10 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		JLabel lblChucVu = new JLabel("Chức vụ");
 		panel_29.add(lblChucVu, BorderLayout.WEST);
 		
-		comboBoxChucVu = new JComboBox();
+		comboBoxChucVu = new JComboBox<String>();
 		panel_29.add(comboBoxChucVu, BorderLayout.CENTER);
-		comboBoxChucVu.addItem("Thu ngân");
-		comboBoxChucVu.addItem("Pha chế");
-		comboBoxChucVu.addItem("Phục vụ");
+		comboBoxChucVu.addItem("Nhân viên");
+		comboBoxChucVu.addItem("Quản lý");
 		lblGioiTinh.setPreferredSize(lblNgayVaoLam.getPreferredSize());
 		lblHoTen.setPreferredSize(lblNgayVaoLam.getPreferredSize());
 		lblMaNV.setPreferredSize(lblNgayVaoLam.getPreferredSize());
@@ -366,7 +381,7 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		Box boxTable = Box.createHorizontalBox();
 		panelDanhSach.add(boxTable);
 		
-		String[] headerStrings = {"STT", "Mã nhân viên", "Họ tên", "Giới tính", "Ngày sinh", "SDT", "Email", "Địa chỉ", "CCCD", "Ngày vào làm", "Ghi chú"};
+		String[] headerStrings = {"STT", "Mã nhân viên", "Họ tên", "Giới tính", "Ngày sinh", "SDT", "Email", "Địa chỉ", "CCCD", "Ngày vào làm", "Trạng thái", "Chức vụ","Ghi chú"};
 		dataTableModel = new DefaultTableModel(headerStrings, 0);
 		tableDanhSach = new JTable(dataTableModel);
 		tableDanhSach.setRowHeight(24);
@@ -374,6 +389,20 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		JScrollPane scrollTable = new JScrollPane();
 		scrollTable.setViewportView(tableDanhSach);
 		boxTable.add(scrollTable);
+		
+		txtMaNV.setEditable(false);
+		txtHoTen.setEditable(false);
+		pwdMatKhau.setEditable(false);
+		comboboxGioiTinh.setEditable(false);
+		ngaySinh.setEditable(false);
+		txtSdt.setEditable(false);
+		txtEmail.setEditable(false);
+		txtCCCD.setEditable(false);
+		txtDiaChi.setEditable(false);
+		ngayVaoLam.setEditable(false);
+		txtGhiChu.setEditable(false);
+		comboBoxTrangThai.setEditable(false);
+		comboBoxChucVu.setEditable(false);
 
 		
 
@@ -385,40 +414,28 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		btnXoa.addActionListener(this);
 		btnSetAvt.addActionListener(this);
 		
+		
+		btnLuu.setEnabled(false);
+		btnHuy.setEnabled(false);
+		btnSetAvt.setEnabled(false);
 		tableDanhSach.addMouseListener(this);
 		
+		layDataThemVaoBang();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int selectedRow = tableDanhSach.getSelectedRow();
-		txtMaNV.setText(tableDanhSach.getValueAt(selectedRow, 1).toString());						txtMaNV.setEditable(false);
-		txtHoTen.setText(tableDanhSach.getValueAt(selectedRow, 2).toString());						txtHoTen.setEditable(false);
-		pwdMatKhau.setText(tableDanhSach.getValueAt(selectedRow, 1).toString());					pwdMatKhau.setEditable(false);
-		if(tableDanhSach.getValueAt(selectedRow, 3).toString().equalsIgnoreCase("Nam")) {
-			comboboxGioiTinh.setSelectedIndex(0);
+		Object event = e.getSource();
+		if(event == tableDanhSach) {
+			int selectedItem = tableDanhSach.getSelectedRow();
+			if(selectedItem != -1) {
+				choPhepLuuVaHuy(false);
+				btnHuy.setEnabled(true);
+				settextEditable(false);
+				hienThiThongTinNhanVien(selectedItem);
+			}
 		}
-		else if(tableDanhSach.getValueAt(selectedRow, 3).toString().equalsIgnoreCase("Nữ")) {
-			comboboxGioiTinh.setSelectedIndex(1);
-		}
-//		ngaySinh.setDate((java.util.Date) tableDanhSach.getValueAt(selectedRow, 4));		
-		ngaySinh.setDate(castToDateFromString(tableDanhSach.getValueAt(selectedRow, 4).toString()));
-																									ngaySinh.setEditable(false);
-	
-		txtSdt.setText(tableDanhSach.getValueAt(selectedRow, 5).toString());						txtSdt.setEditable(false);
-		txtEmail.setText(tableDanhSach.getValueAt(selectedRow, 6).toString());						txtEmail.setEditable(false);
-		txtDiaChi.setText(tableDanhSach.getValueAt(selectedRow, 7).toString());						txtDiaChi.setEditable(false);
-		txtCCCD.setText(tableDanhSach.getValueAt(selectedRow, 8).toString());						txtCCCD.setEditable(false);
-		ngayVaoLam.setDate(castToDateFromString(tableDanhSach.getValueAt(selectedRow, 4).toString()));
-																									ngayVaoLam.setEditable(false);	
-		txtGhiChu.setText(tableDanhSach.getValueAt(selectedRow, 10).toString());					txtGhiChu.setEditable(false);
-																									comboBoxChucVu.setEditable(false);
-																									comboboxGioiTinh.setEditable(false);
-																									comboBoxTrangThai.setEditable(false);
-																									ngaySinh.setEditable(false);
-																									ngayVaoLam.setEditable(false);
-	
 		
 	}
 
@@ -450,101 +467,300 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object ev = e.getSource();
+		if(ev.equals(btnSetAvt)) {
+			String avtPath = getPathNameAvatar();
+			System.out.println("avt check: " + avtPath);
+			lblAvt.setIcon(new ImageScaler( "/image_NhanVien/" + avtPath, 150, 150).getScaledImageIcon());
+			btnSetAvt.setText(avtPath);
+		}
 		if(ev.equals(btnThem)) {
-			themAction();
-			xoaTrangAction();
+			choPhepLuuVaHuy(true);
+			settextEditable(true);
+			txtMaNV.setEditable(true);
+			xoaRong();
+			ngayVaoLam.setDate(new java.util.Date());
+			isThem = true;
 		}
 		if(ev.equals(btnXoa)) {
-			xoaAction();
-			xoaTrangAction();
+			if(tableDanhSach.getSelectedRow() != -1) {
+				xoaAction();
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Chưa chọn dòng cần xóa.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}		
 		}
 		if(ev.equals(btnSua)) {
-			suaAction();
-			xoaTrangAction();
+			
+			isThem = false;
+			if(tableDanhSach.getSelectedRow() != -1) {
+				choPhepLuuVaHuy(true);
+				settextEditable(true);
+			}
 		}
 		if(ev.equals(btnHuy)) {
-			xoaTrangAction();
+			choPhepLuuVaHuy(false);
+			settextEditable(false);
+			xoaRong();
 		}
 		if(ev.equals(btnLuu)) {
-			luuAction();
-			xoaTrangAction();
+			if(isThem == true) {
+				themAction();
+			}
+			else {
+				suaAction();
+			}
 		}
+		
 	}
 	
-	public void themAction() {
+
+	
+	
+	private void suaAction() {
+		// TODO Auto-generated method stub
+		if(isValidInput() == true) {
+			NhanVien nVien = convertDataToNhanVien();
+			TaiKhoan tKhoan = new TaiKhoan(nVien, pwdMatKhau.getText());
+			if(nVien != null) {
+				if(nv_dao.suaNhanVien(nVien, tKhoan)) {
+					xoaRong();
+					choPhepLuuVaHuy(false);
+					settextEditable(false);
+					JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công.");
+					refreshTableToUpdateChange();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Sửa không thành công");
+				}
+			}
+		}
+	}
+
+	private void themAction() {
+		// TODO Auto-generated method stub
+		if(isValidInput() == true) {
+			NhanVien nVien = convertDataToNhanVien();
+			TaiKhoan taiKhoan = new TaiKhoan(nVien, pwdMatKhau.getText());
+			System.out.println(nVien.toString());
+			if(nVien != null) {
+				if(nv_dao.themNhanVien(nVien, taiKhoan)) {
+					themNhanVienVaoBang(nVien);
+					
+					xoaRong();
+					JOptionPane.showMessageDialog(null, "Thêm nhân viên mới thành công.");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Thêm nhân viên mới không thành công.");
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra trong quá trình thêm.");
+			}
+		}
+	}
+
+	private void xoaAction() {
+		// TODO Auto-generated method stub
+		String ma = txtMaNV.getText();
+		if(ma != null) {
+			int result = JOptionPane.showConfirmDialog(this, "Xác nhận xóa?", "Chú Ý", JOptionPane.YES_NO_OPTION);
+			if(result == JOptionPane.YES_OPTION) {
+				if(nv_dao.xoaNhanVien(ma)) {
+					xoaRong();
+					refreshTableToUpdateChange();
+					JOptionPane.showMessageDialog(null, "Xóa thành công.");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Xóa không thành công.");
+				}
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra trong quá trình sửa.");
+		}
+	}
+
+	private void xoaRong() {
+		// TODO Auto-generated method stub
+//		listNV = nv_dao.getAllNhanVien();
+//		themAllNhanVienVaoBang(listNV);
+		txtCCCD.setText("");		
+		txtDiaChi.setText("");		
+		txtEmail.setText(""); 		
+		txtGhiChu.setText(""); 		
+		txtHoTen.setText("");		
+		txtMaNV.setText("");		
+		pwdMatKhau.setText("");		
+		txtSdt.setText(""); 		
+		lblAvt.setIcon(null);		
+		ngaySinh.setDate(null);		
+		ngayVaoLam.setDate(null);	
+		tableDanhSach.clearSelection();
+		lblAvt.setIcon(new ImageScaler("/image_NhanVien/defaultavt.jpg" , 150, 150).getScaledImageIcon());
+		btnSetAvt.setText("Ảnh đại diện");
+	}
+
+	private void layDataThemVaoBang() {
+		listNV = nv_dao.getAllNhanVien();
+		listTK = tk_dao.getAllTaiKhoan();
+		System.out.println(listNV.toString());
+		themAllNhanVienVaoBang(listNV);
+	}
+	
+	private void refreshTableToUpdateChange() {
+		ArrayList<NhanVien> listNVMoi = nv_dao.getAllNhanVien();
+		dataTableModel.setRowCount(0);
+		themAllNhanVienVaoBang(listNVMoi);
+		dataTableModel.fireTableDataChanged();
+		tableDanhSach.repaint();
+	}
+	
+	private void settextEditable(boolean isEditable) {
+		// TODO Auto-generated method stub
+		if(isEditable == false) {
+			txtMaNV.setEditable(false);
+			txtHoTen.setEditable(false);
+			pwdMatKhau.setEditable(false);
+			comboboxGioiTinh.setEditable(false);
+			ngaySinh.setEditable(false);
+			txtSdt.setEditable(false);
+			txtEmail.setEditable(false);
+			txtCCCD.setEditable(false);
+			txtDiaChi.setEditable(false);
+			ngayVaoLam.setEditable(false);
+			txtGhiChu.setEditable(false);
+			comboBoxTrangThai.setEditable(false);
+			comboBoxChucVu.setEditable(false);
+			btnSetAvt.setEnabled(false);
+		}
+		else {
+			txtMaNV.setEditable(false);
+			txtHoTen.setEditable(true);
+			pwdMatKhau.setEditable(true);
+			comboboxGioiTinh.setEditable(true);
+			ngaySinh.setEditable(true);
+			txtSdt.setEditable(true);
+			txtEmail.setEditable(true);
+			txtCCCD.setEditable(true);
+			txtDiaChi.setEditable(true);
+			ngayVaoLam.setEditable(true);
+			txtGhiChu.setEditable(true);
+			comboBoxTrangThai.setEditable(true);
+			comboBoxChucVu.setEditable(true);
+			btnSetAvt.setEnabled(true);
+		}
+	}
+
+	
+	//set enable nut luu va huy
+	private void choPhepLuuVaHuy( boolean display) {
+		// TODO Auto-generated method stub
+		if(display == true) {
+			btnLuu.setEnabled(true);
+			btnHuy.setEnabled(true);
+			
+			btnThem.setEnabled(false);
+			btnXoa.setEnabled(false);
+			btnSua.setEnabled(false);
+		}
+		else {
+			btnLuu.setEnabled(false);
+			btnHuy.setEnabled(false);
+			btnThem.setEnabled(true);
+			btnXoa.setEnabled(true);
+			btnSua.setEnabled(true);
+		}
+		
+	}
+
+	//lay avt
+	private String getPathNameAvatar() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Hình ảnh", "jpg", "jpeg", "png", "gif"));
+
+		int returnValue = fileChooser.showOpenDialog(null);
+
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			java.io.File selectedFile = fileChooser.getSelectedFile();
+			String filePathAvatar = selectedFile.getName();
+			pathNameAvatar = filePathAvatar;
+			repaint();
+			revalidate();
+		}
+		return pathNameAvatar;
+	}
+	public java.util.Date castToDateFromString(String dateString) {
 		try {
-			String ma = txtMaNV.getText();
-			String hoTen = txtHoTen.getText();
-			String matKhau = pwdMatKhau.getText();
-			boolean gioiTinh = false;
-			if(comboboxGioiTinh.getSelectedItem().toString().equalsIgnoreCase("Nam")) {
-				gioiTinh = true;
-			}
-			boolean trangthai = false;
-			if(comboBoxTrangThai.getSelectedItem().toString().equalsIgnoreCase("Đang làm")) {
-				trangthai = true;
-			}
-			java.util.Date ngayXinh = ngaySinh.getDate();
-			String sdt = txtSdt.getText();
-			String email = txtEmail.getText();
-			String macccd = txtCCCD.getText();
-			String diaChi = txtDiaChi.getText();
-			java.util.Date ngayvaolam = ngayVaoLam.getDate();
-			String ghichu = txtGhiChu.getText();
-			boolean trangThai = true;
-			if(comboBoxTrangThai.getSelectedItem().toString().equalsIgnoreCase("Đã nghỉ")) {
-				trangthai = false;
-			}
-			int chucvu = comboBoxChucVu.getSelectedIndex();
-			NhanVien nVien = new NhanVien(ma, hoTen, matKhau, gioiTinh, ngayXinh, sdt, email, macccd, diaChi, ngayvaolam, ghichu, trangThai, chucvu);
-			if(isValidInput() && listNhanVien.themNhanVien(nVien)) {
-				String row[] = {Integer.toString(listNhanVien.timKiemNhanVienIndex(nVien) + 1), ma, hoTen, gioiTinh == true? "Nam" : "Nữ", ngayXinh.toString(), sdt, email, diaChi, macccd, ngayvaolam.toString(), ghichu };
-				dataTableModel.addRow(row);
-				xoaTrangAction();
-				JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-			}
-		}catch (Exception e) {
-			// TODO: handle exception
-			JOptionPane.showMessageDialog(null, "Lỗi thêm nhân viên.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			String dateFormatPattern = "EEE MMM dd HH:mm:ss zzz yyyy";
+			SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern, Locale.US);
+			java.util.Date casedDate;
+			casedDate =  dateFormat.parse(dateString);
+			return casedDate;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		  return null;
 	}
 	
-	public void xoaAction() {
-		
+	private void themAllNhanVienVaoBang(ArrayList<NhanVien> list) {
+		dataTableModel.setRowCount(0);
+		for(NhanVien nv: list) {
+			themNhanVienVaoBang(nv);
+		}
 	}
 	
-	public void suaAction() {
-		
-	}
+	private void themNhanVienVaoBang(NhanVien nv) {
+		String[] row = new String[13];
+		row[0] = String.valueOf(dataTableModel.getRowCount() +1);
+		row[1] = nv.getMaNV();
+		row[2] = nv.getTenNV();
+		row[3] = nv.isGioiTinh() == true ? "Nam" : "Nữ";
+		row[4] = nv.getNgaySinh().toString();
+		row[5] = nv.getsDT();
+		row[6] = nv.getEmail();
+		row[7] = nv.getDiaChi();
+		row[8] = nv.getMaCCCD();
+		row[9] = nv.getNgayVaoLam().toString();
+		row[10]= nv.isTrangThai() == true ? "Đang làm" : "Đã nghỉ";
+		row[11]= comboBoxChucVu.getItemAt(nv.getChucVu());
+		row[12]= nv.getGhiChu();
+		dataTableModel.addRow(row);
+ 	}
 	
-	public void xoaTrangAction() {
-		txtCCCD.setText("");		txtCCCD.setEditable(true);
-		txtDiaChi.setText("");		txtDiaChi.setEditable(true);
-		txtEmail.setText(""); 		txtEmail.setEditable(true);
-		txtGhiChu.setText(""); 		txtGhiChu.setEditable(true);
-		txtHoTen.setText("");		txtHoTen.setEditable(true);
-		txtMaNV.setText("");		txtMaNV.setEditable(true);
-		pwdMatKhau.setText("");		pwdMatKhau.setEditable(true);
-		txtSdt.setText(""); 		txtSdt.setEditable(true);
-		lblAvt.setIcon(null);		comboboxGioiTinh.setEditable(true);
-		ngaySinh.setDate(null);		ngaySinh.setEditable(true);
-		ngayVaoLam.setDate(null);	ngayVaoLam.setEditable(true);
-	}
-	
-	public void luuAction() {
-		
+	private void hienThiThongTinNhanVien(int selectedItem) {
+		txtMaNV.setText(listNV.get(selectedItem).getMaNV());
+		txtHoTen.setText(listNV.get(selectedItem).getTenNV());
+		pwdMatKhau.setText(listTK.get(selectedItem).getMatKhau());
+		comboboxGioiTinh.setSelectedIndex(listNV.get(selectedItem).isGioiTinh() == true ? 0 : 1);
+		ngaySinh.setDate(listNV.get(selectedItem).getNgaySinh());
+		txtSdt.setText(listNV.get(selectedItem).getsDT());
+		txtEmail.setText(listNV.get(selectedItem).getEmail());
+		txtCCCD.setText(listNV.get(selectedItem).getMaCCCD());
+		txtDiaChi.setText(listNV.get(selectedItem).getDiaChi());
+		ngayVaoLam.setDate(listNV.get(selectedItem).getNgayVaoLam());
+		txtGhiChu.setText(listNV.get(selectedItem).getGhiChu());
+		comboBoxTrangThai.setSelectedIndex(listNV.get(selectedItem).isTrangThai() == true ? 0 : 1);
+		comboBoxChucVu.setSelectedIndex(listNV.get(selectedItem).getChucVu());
+		if(listNV.get(selectedItem).getAvtString() == null) {
+			lblAvt.setIcon(new ImageScaler("defaultavt.jpg", 150, 150).getScaledImageIcon());
+		}
+		else {
+			lblAvt.setIcon(new ImageScaler("/image_NhanVien/" + listNV.get(selectedItem).getAvtString() , 150, 150).getScaledImageIcon());
+		}
 	}
 	
 	public boolean isValidInput() {
-		String regexMa = "^NV+[0-9]{3}$";
+		String regexMa = "^NV+[0-9]{4}$";
 		String regexHoTen = "^[A-Za-z]+( [A-Za-z]+)*$";
 		String regexmatKhau = "^[a-zA-Z0-9]{9,15}$";
 		java.util.Date ngayHnay = new java.util.Date();
 		String regexSdt = "^0[0-9]{9}$";
 		String regexEmail = "^[a-zA-Z0-9._%+-]+@[\\w]*+\\.[\\w]*$";
 		String regexCCCD = "^[0-9]{12}";
-		
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -18);
+		java.util.Date allowAge = calendar.getTime();
 		
 		
 		if(!txtMaNV.getText().matches(regexMa)) {
@@ -559,8 +775,8 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 			JOptionPane.showMessageDialog(null, "Lỗi mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		if(ngaySinh.getDate().after(ngayHnay)) {
-			JOptionPane.showMessageDialog(null, "Lỗi ngày sinh", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		if(ngaySinh.getDate().after(allowAge)) {
+			JOptionPane.showMessageDialog(null, "Lỗi ngày sinh. Phai hon 18 tuoi", "Lỗi", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		if(!txtSdt.getText().matches(regexSdt)) {
@@ -583,18 +799,35 @@ public class NhanVien_QuanLy_UI extends JPanel implements ActionListener,  Mouse
 		return true;
 	}
 	
-	public java.util.Date castToDateFromString(String dateString) {
-		try {
-			String dateFormatPattern = "EEE MMM dd HH:mm:ss zzz yyyy";
-			SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern, Locale.US);
-			java.util.Date casedDate;
-			casedDate =  dateFormat.parse(dateString);
-			return casedDate;
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private NhanVien convertDataToNhanVien() {
+		String ma = txtMaNV.getText();
+		String hoTen = txtHoTen.getText();
+		String matKhau = pwdMatKhau.getText();
+		boolean gioiTinh = false;
+		if(comboboxGioiTinh.getSelectedItem().toString().equalsIgnoreCase("Nam")) {
+			gioiTinh = true;
 		}
-		  return null;
+		boolean trangthai = false;
+		if(comboBoxTrangThai.getSelectedItem().toString().equalsIgnoreCase("Đang làm")) {
+			trangthai = true;
+		}
+		java.util.Date ngayXinh = ngaySinh.getDate();
+		Date ngayXinhSQLDate = new Date(ngayXinh.getTime());
+		String sdt = txtSdt.getText();
+		String email = txtEmail.getText();
+		String macccd = txtCCCD.getText();
+		String diaChi = txtDiaChi.getText();
+		java.util.Date ngayvaolam = ngayVaoLam.getDate();
+		Date ngayVaoLamSQLDate = new Date(ngayvaolam.getTime());
+		String ghichu = txtGhiChu.getText();
+//		boolean trangThai = true;
+//		if(comboBoxTrangThai.getSelectedItem().toString().equalsIgnoreCase("Đã nghỉ")) {
+//			trangthai = false;
+//		}
+		int chucvu = comboBoxChucVu.getSelectedIndex();
+		String avt = pathNameAvatar;
+		NhanVien nVien = new NhanVien(ma, hoTen, gioiTinh, ngayXinhSQLDate, sdt, email, macccd, diaChi, ngayVaoLamSQLDate, ghichu, trangthai, chucvu, avt);
+		return nVien;
 	}
-	
+
 }

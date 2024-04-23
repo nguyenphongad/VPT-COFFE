@@ -7,7 +7,6 @@ import java.util.Objects;
 public class NhanVien {
 	private String maNV;
 	private String tenNV;
-	private String matKhau;
 	private boolean gioiTinh;
 	private java.sql.Date ngaySinh;
 	private String sDT;
@@ -18,6 +17,7 @@ public class NhanVien {
 	private String ghiChu;
 	private boolean trangThai;
 	private int chucVu;
+	private String avtString;
 //	public NhanVien(String maNV, String tenNV, String matKhau, boolean gioiTinh, java.sql.Date ngaySinh, String sDT,
 //			String email, String maCCCD, String diaChi, java.sql.Date ngayVaoLam, String ghiChu, boolean trangThai,
 //			int chucVu) {
@@ -36,33 +36,10 @@ public class NhanVien {
 //		this.trangThai = trangThai;
 //		this.chucVu = chucVu;
 //	}
-	public NhanVien(String ma, String hoTen, String matKhau2, boolean gioiTinh2, Date ngayXinh, String sdt2,
-			String email2, String macccd2, String diaChi2, Date ngayvaolam2, String ghichu2, boolean trangThai2,
-			int chucvu2) {
-		// TODO Auto-generated constructor stub
-		this.maNV = maNV;
-		this.tenNV = tenNV;
-		this.matKhau = matKhau;
-		this.gioiTinh = gioiTinh;
-		this.ngaySinh = ngaySinh;
-		this.sDT = sDT;
-		this.email = email;
-		this.maCCCD = maCCCD;
-		this.diaChi = diaChi;
-		this.ngayVaoLam = ngayVaoLam;
-		this.ghiChu = ghiChu;
-		this.trangThai = trangThai;
-		this.chucVu = chucVu;
-	}
-	
-	
-	
 	public NhanVien(String maNV) {
-	super();
-	this.maNV = maNV;
-}
-
-
+		super();
+		this.maNV = maNV;
+	}
 	public String getMaNV() {
 		return maNV;
 	}
@@ -74,12 +51,6 @@ public class NhanVien {
 	}
 	public void setTenNV(String tenNV) {
 		this.tenNV = tenNV;
-	}
-	public String getMatKhau() {
-		return matKhau;
-	}
-	public void setMatKhau(String matKhau) {
-		this.matKhau = matKhau;
 	}
 	public boolean isGioiTinh() {
 		return gioiTinh;
@@ -141,21 +112,51 @@ public class NhanVien {
 	public void setChucVu(int chucVu) {
 		this.chucVu = chucVu;
 	}
-	@Override
-	public int hashCode() {
-		return Objects.hash(maNV);
+	public String getAvtString() {
+		return avtString;
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NhanVien other = (NhanVien) obj;
-		return Objects.equals(maNV, other.maNV);
+	public void setAvtString(String avtString) {
+		this.avtString = avtString;
 	}
+	public NhanVien(String maNV, String tenNV, boolean gioiTinh, java.sql.Date ngaySinh, String sDT, String email,
+			String maCCCD, String diaChi, java.sql.Date ngayVaoLam, String ghiChu, boolean trangThai, int chucVu,
+			String avtString) {
+		super();
+		this.maNV = maNV;
+		this.tenNV = tenNV;
+		this.gioiTinh = gioiTinh;
+		this.ngaySinh = ngaySinh;
+		this.sDT = sDT;
+		this.email = email;
+		this.maCCCD = maCCCD;
+		this.diaChi = diaChi;
+		this.ngayVaoLam = ngayVaoLam;
+		this.ghiChu = ghiChu;
+		this.trangThai = trangThai;
+		this.chucVu = chucVu;
+		this.avtString = avtString;
+	}
+	
+	
+//	public NhanVien(String maNV, String tenNV, String matKhau, boolean gioiTinh2, Date ngayXinh, String sdt2,
+//			String email2, String macccd2, String diaChi2, Date ngayvaolam2, String ghichu2, boolean trangThai2,
+//			int chucvu2, String avtString) {
+//		// TODO Auto-generated constructor stub
+//		this.maNV = maNV;
+//		this.tenNV = tenNV;
+//		this.matKhau = matKhau;
+//		this.gioiTinh = gioiTinh;
+//		this.ngaySinh = ngaySinh;
+//		this.sDT = sDT;
+//		this.email = email;
+//		this.maCCCD = maCCCD;
+//		this.diaChi = diaChi;
+//		this.ngayVaoLam = ngayVaoLam;
+//		this.ghiChu = ghiChu;
+//		this.trangThai = trangThai;
+//		this.chucVu = chucVu;
+//		this.avtString = avtString;
+//	}
 	
 	
 	

@@ -123,6 +123,16 @@ public class Menu_UI extends JPanel implements ActionListener, MouseInputListene
 		mnSanPham.addActionListener(this);
 		mnThongKe.addActionListener(this);
 		mnNhanVien.addActionListener(this);
+		
+		
+		if(main.taiKhoan.getNV().getChucVu()==1) {
+			mnNhanVien.setEnabled(true);
+		}else if(main.taiKhoan.getNV().getChucVu()==0){
+			mnNhanVien.setEnabled(false);
+			mnNhanVien.setBackground(Color.decode("#8c7069"));
+		}
+		
+		
 
 	}
 
