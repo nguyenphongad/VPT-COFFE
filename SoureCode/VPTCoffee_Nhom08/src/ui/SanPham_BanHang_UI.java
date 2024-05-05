@@ -13,6 +13,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,10 +38,13 @@ import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.border.EmptyBorder;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -51,6 +60,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXDatePicker;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfTemplate;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import customUI.ImageScaler;
 import customUI.RoundedButton;
@@ -100,7 +114,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	private JXDatePicker dpNgaySinhKHnew;
 
 	private RoundedButton btnHuyGD;
-	private JCheckBox cbInHoaDon;
+	private JButton cbInHoaDon;
 	private RoundedButton btnXacNhanTT;
 	private JLabel lblNgayLapHDOutput, lblNhanVienLapOutput, lblKHLapOutPut, lblGChuOutPut, lblMaHD;
 
@@ -109,7 +123,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 	DecimalFormat decimalFormat = new DecimalFormat("#,##0");
 	private Main_UI main;
-	
+
 //	---------------------------------------------------------------------
 
 	public SanPham_BanHang_UI(Main_UI main) {
@@ -123,7 +137,8 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 		// phan pnl ben trai
 		JPanel pnlLeft = new JPanel();
-		pnlLeft.setBorder( new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.decode("#c0c0c0")), new EmptyBorder(0, 0, 0, 5)));
+		pnlLeft.setBorder(
+				new CompoundBorder(new MatteBorder(0, 0, 0, 2, Color.decode("#c0c0c0")), new EmptyBorder(0, 0, 0, 5)));
 		pnlContainer.add(pnlLeft);
 		pnlLeft.setLayout(new BorderLayout(0, 0));
 
@@ -150,7 +165,6 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		cmbLoaiSP.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#B16E5C")));
 
 		pnlCmb.add(cmbLoaiSP, BorderLayout.CENTER);
-
 
 		// -------------------------------------------------------------------------
 
@@ -443,7 +457,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 		pnlLR1.add(cmbPhuongThucThanhToan);
 
-		//DÒNG 2 PHƯƠNG THỨC THANH TOÁN ----------------------------
+		// DÒNG 2 PHƯƠNG THỨC THANH TOÁN ----------------------------
 		JPanel pnlL4 = new JPanel();
 		pnlNoteRight.add(pnlL4);
 		pnlL4.setLayout(new BorderLayout(0, 0));
@@ -560,7 +574,6 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		btnThanhToan.setForeground(Color.decode("#ffffff"));
 		btnThanhToan.setFont(new Font("Segoe UI Semibold", Font.BOLD, 21));
 		pnlActionRight.add(btnThanhToan);
-
 
 		btnXoa.addActionListener(this);
 		btnTimKH.addActionListener(this);
@@ -933,7 +946,8 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 
 	}
 
-	// DIALOG THEM KH TÍCH ĐIỂM ---------------------------------------------------------------------
+	// DIALOG THEM KH TÍCH ĐIỂM
+	// ---------------------------------------------------------------------
 
 	public void showDialogTimKH() {
 		JDialog dlTimKH = new JDialog(new JFrame(), "THÊM KHÁCH HÀNG TÍCH ĐIỂM",
@@ -1101,7 +1115,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 	public void kiemTraTichDiemKH() {
 		int sdtCanTim = Integer.valueOf(txtSdtKH.getText());
 
-		//DAO
+		// DAO
 		khachHangDS = khachHang_dao.timSoDienThoaiKhachHang(sdtCanTim);
 
 		if (khachHangDS.size() != 0) {
@@ -1170,7 +1184,7 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		pnlQtitle.setBackground(new Color(255, 255, 255));
 		dlQR.add(pnlQtitle, BorderLayout.NORTH);
 
-		JLabel lblTtitleQuet = new JLabel("QUÉT MÃ ĐỂ THANH TOÁN");
+		JLabel lblTtitleQuet = new JLabel("");
 		lblTtitleQuet.setFont(new Font("Segoe UI Semibold", Font.BOLD, 25));
 		pnlQtitle.add(lblTtitleQuet);
 
@@ -1359,10 +1373,11 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		Component horizontalStrut = Box.createHorizontalStrut(560);
 		pnlAction.add(horizontalStrut);
 
-		cbInHoaDon = new JCheckBox("In Hoá Đơn");
+		cbInHoaDon = new JButton("In Hoá Đơn");
 		cbInHoaDon.setFont(new Font("Segoe UI Semibold", Font.BOLD, 19));
-		cbInHoaDon.setSelected(true);
 		pnlAction.add(cbInHoaDon);
+
+		
 
 		Component horizontalStrut1 = Box.createHorizontalStrut(10);
 		pnlAction.add(horizontalStrut1);
@@ -1373,6 +1388,49 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		btnXacNhanTT.setFont(new Font("Segoe UI Semibold", Font.BOLD, 16));
 		pnlAction.add(btnXacNhanTT);
 
+		
+		cbInHoaDon.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				dlQR.add(new JPanel(), BorderLayout.CENTER);
+
+				Document document = new Document(new com.itextpdf.text.Rectangle(dlQR.getWidth(), 500));
+				try {
+					String path = "HoaDon" + Math.random() + ".pdf";
+					PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(path));
+					document.open();
+					PdfContentByte cb = writer.getDirectContent();
+					PdfTemplate tp = cb.createTemplate(document.getPageSize().getWidth(),
+							document.getPageSize().getHeight());
+					Graphics2D g2 = tp.createGraphicsShapes((int) document.getPageSize().getWidth(),
+							(int) document.getPageSize().getHeight());
+
+					// Paint the panel onto the Graphics2D
+					dlQR.paint(g2);
+					g2.dispose();
+					cb.addTemplate(tp, -495, 0);
+
+					// Close the document before printing
+					document.close();
+
+					// Open the file in the default PDF viewer
+					File pdfFile = new File(path);
+					if (Desktop.isDesktopSupported()) {
+						Desktop.getDesktop().open(pdfFile);
+					}
+
+					// Print the document
+					printPDF(pdfFile);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		
 		List<JLabel> ListTenSP = new ArrayList<>();
 		List<JLabel> ListSoLuongSP = new ArrayList<>();
 		List<JLabel> ListThanhTienSP = new ArrayList<>();
@@ -1622,6 +1680,33 @@ public class SanPham_BanHang_UI extends JPanel implements ActionListener, MouseL
 		} catch (NumberFormatException e) {
 			alertNotification("Giá trị nhập vào không hợp lệ");
 			return null;
+		}
+	}
+
+	private void printPDF(File pdfFile) {
+		try {
+			PrinterJob job = PrinterJob.getPrinterJob();
+
+			job.setPrintable(new PrintableDocument(pdfFile));
+
+			if (job.printDialog()) {
+				job.print();
+			}
+		} catch (PrinterException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private class PrintableDocument implements Printable {
+		private File pdfFile;
+
+		public PrintableDocument(File pdfFile) {
+			this.pdfFile = pdfFile;
+		}
+
+		@Override
+		public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
+			return NO_SUCH_PAGE;
 		}
 	}
 

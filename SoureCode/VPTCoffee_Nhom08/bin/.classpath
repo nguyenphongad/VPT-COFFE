@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="src/lib/commons-digester-2.1.jar"/>
 	<classpathentry kind="lib" path="src/lib/commons-logging-api-1.1.jar"/>
 	<classpathentry kind="lib" path="src/lib/groovy-all-2.0.1.jar"/>
+	<classpathentry kind="lib" path="src/lib/itextpdf-5.5.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
